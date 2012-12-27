@@ -172,7 +172,7 @@ static void safe_free (void* ptr)
 }
 
 
-static char frame_equal (const char* name1, const char* name2)
+static char frame_equal (const I8* name1, const I8* name2)
 {
     char equal = 1;
     int i;
@@ -238,7 +238,7 @@ Model_error_code MD2_load (const char* filename, char clockwise, char left_hande
 	unsigned start;
 	unsigned numAnimations = 1;
     int currentFrame;
-    const char* name = 0;
+    const I8* name = 0;
     int i;
 
     // Open the file for reading.
