@@ -84,8 +84,12 @@ void Application::setup (int width, int height, const char* title, bool fullscre
 
 void Application::quit ()
 {
-	if (!impl->running) return;
 	impl->running = false;
+}
+
+
+void Application::terminate ()
+{
 	onQuit ();
 	if (glfwGetWindowParam (GLFW_OPENED)) glfwCloseWindow ();
 	glfwTerminate ();
@@ -106,10 +110,11 @@ void Application::run ()
 	{
 		t.tick ();
 		float dt = t.getDelta();
-		running = update(dt) && glfwGetWindowParam (GLFW_OPENED);
+		update (dt);
+		running = running && glfwGetWindowParam (GLFW_OPENED);
 	}
 
-	quit ();
+	terminate ();
 }
 
 
@@ -134,14 +139,15 @@ void Application::runCapped (int max_fps)
 		float dt = frame.getDelta ();
 
 		control.tick ();
-		running = update(dt) && glfwGetWindowParam (GLFW_OPENED);
+		update (dt);
+		running = running && glfwGetWindowParam (GLFW_OPENED);
 		control.tick ();
 
 		float frame_time = control.getDelta ();
 		if (frame_time < desired_frame_time) timer_sleep (desired_frame_time - frame_time);
 	}
 
-	quit ();
+	terminate ();
 }
 
 
