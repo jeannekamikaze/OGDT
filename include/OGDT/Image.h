@@ -13,7 +13,7 @@ class DECLDIR Image
 {
 	int w;
 	int h;
-	int bpp;
+	int c;
 	U8* pixels;
 
 	Image (const Image&);
@@ -138,10 +138,10 @@ public:
 	int height () const { return h; }
 
 	/*
-	Function: bitsPerPixel
-	Return the image's bits per pixel.
+	Function: numComponents
+	Return the image's number of components per pixel.
 	*/
-	int bitsPerPixel () const { return bpp; }
+	int numComponents () const { return c; }
 };
 
 } // namespace OGDT

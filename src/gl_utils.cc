@@ -99,9 +99,9 @@ GLuint load_texture (const char* path)
 	image.flipVertically ();
 	unsigned w = image.width();
 	unsigned h = image.height();
-	unsigned bpp = image.bitsPerPixel();
+	unsigned c = image.numComponents();
 	GLenum format;
-	switch (bpp)
+	switch (c)
 	{
 	case 1:  format = GL_DEPTH; break;
 	case 3:  format = GL_RGB;   break;
@@ -114,12 +114,12 @@ GLuint load_texture (const char* path)
 	{
 		GLfloat ani;
 		glGetFloatv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ani);
-		gluBuild2DMipmaps (GL_TEXTURE_2D, bpp, w, h, format, GL_UNSIGNED_BYTE, image);
+		gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani);
 	}
 	else
 	{
-		gluBuild2DMipmaps (GL_TEXTURE_2D, bpp, w, h, format, GL_UNSIGNED_BYTE, image);
+		gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
 		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		//glTexImage2D (GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());

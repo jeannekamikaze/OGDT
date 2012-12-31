@@ -22,7 +22,7 @@ void Image::from_file (const char* path, Image& img)
         throw EXCEPTION (os);
     }
 	if (img.pixels) stbi_image_free (img.pixels);
-	img.pixels = stbi_load_from_file (file, &img.w, &img.h, &img.bpp, 0);
+	img.pixels = stbi_load_from_file (file, &img.w, &img.h, &img.c, 0);
 	fclose (file);
 }
 
@@ -30,7 +30,7 @@ void Image::from_file (const char* path, Image& img)
 void Image::from_mem (const U8* data, int n, Image& img)
 {
 	if (img.pixels) stbi_image_free (img.pixels);
-	img.pixels = stbi_load_from_memory ((const unsigned char*)data, n, &img.w, &img.h, &img.bpp, 0);
+	img.pixels = stbi_load_from_memory ((const unsigned char*)data, n, &img.w, &img.h, &img.c, 0);
 }
 
 
@@ -42,8 +42,8 @@ Image::~Image ()
 
 void Image::flipVertically ()
 {
-	int img_size = w * h * bpp;
-    int line_size = w * bpp;
+	int img_size = w * h * c;
+    int line_size = w * c;
     
     unsigned char* top = pixels;
     unsigned char* bot = &pixels[img_size - line_size];
@@ -89,45 +89,47 @@ U8 Image::operator [] (int i) const
 
 U8& Image::r (int row, int col)
 {
-	return pixels[(row*w + col) * bpp];
+	return pixels[(row*w + col) * c];
 }
 
 
 U8 Image::r (int row, int col) const
 {
-	return pixels[(row*w + col) * bpp];
+	return pixels[(row*w + col) * c];
 }
 
 
 U8& Image::g (int row, int col)
 {
-	return pixels[(row*w + col) * bpp + 1];
+	return pixels[(row*w + col) * c + 1];
 }
 
 
 U8 Image::g (int row, int col) const
 {
-	return pixels[(row*w + col) * bpp + 1];
+	return pixels[(row*w + col) * c + 1];
 }
 
 
 U8& Image::b (int row, int col)
 {
-	return pixels[(row*w + col) * bpp + 2];
+	return pixels[(row*w + col) * c + 2];
 }
 
 
 U8 Image::b (int row, int col) const
 {
-	return pixels[(row*w + col) * bpp + 2];
+	return pixels[(row*w + col) * c + 2];
 }
+
 
 U8& Image::a (int row, int col)
 {
-	return pixels[(row*w + col) * bpp + 3];
+	return pixels[(row*w + col) * c + 3];
 }
+
 
 U8 Image::a (int row, int col) const
 {
-	return pixels[(row*w + col) * bpp + 3];
+	return pixels[(row*w + col) * c + 3];
 }
