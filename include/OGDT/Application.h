@@ -17,6 +17,8 @@ class DECLDIR Application
 	Application (const Application&);
 	Application& operator= (const Application&);
 
+	void terminate ();
+
 public:
 
 	Application ();
@@ -157,7 +159,7 @@ protected:
 
 	dt - The time elapsed since the last frame, in seconds.
 	*/
-	virtual bool update (float dt) { return false; }
+	virtual void update (float dt) {}
 };
 
 } // namespace OGDT
