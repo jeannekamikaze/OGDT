@@ -138,7 +138,7 @@ public:
 	}
 	
 	/*
-	Function: g
+	Function: b
 	Return a mutable reference to the green component of the pixel at the given position.
 	*/
 	template <class T>
@@ -156,7 +156,7 @@ public:
 	}
 	
 	/*
-	Function: g
+	Function: a
 	Return a mutable reference to the green component of the pixel at the given position.
 	*/
 	template <class T>
