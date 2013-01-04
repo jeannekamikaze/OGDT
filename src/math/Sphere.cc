@@ -5,8 +5,8 @@
 using namespace OGDT;
 
 
-Sphere::Sphere (vec3 _center, float _radius)
-    : center (_center), radius2 (_radius*_radius) {}
+Sphere::Sphere (vec3 c, float r)
+    : center (c), radius2 (r*r) {}
 
 
 void Sphere::add (vec3 p)
