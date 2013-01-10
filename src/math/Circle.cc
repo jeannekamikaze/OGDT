@@ -17,5 +17,5 @@ void Circle::add (vec2 p)
 
 float Circle::radius () const
 {
-	return std::sqrt (radius2);
+    return std::sqrt (radius2);
 }

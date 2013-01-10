@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 
 set (CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
+set (OGDT_AVOID_NORMALISATION False CACHE BOOL "Turn on vector normalisation optimisations")
 set (CMAKE_DEBUG_POSTFIX "d")
 
 project (OGDT)

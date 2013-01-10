@@ -22,7 +22,7 @@ quat OGDT::qrot (float angle, float x, float y, float z)
     float a = angle * TO_RAD * 0.5f;
     float sa = sin (a);
     float w = cos (a);
-	float mag = sqrt(x*x + y*y + z*z);
+    float mag = sqrt(x*x + y*y + z*z);
     mag = mag == 0.0f ? 1.0f : mag;
     x = x * sa;
     y = y * sa;

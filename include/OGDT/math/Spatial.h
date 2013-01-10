@@ -14,78 +14,78 @@ An object in 3D space.
 class DECLDIR Spatial
 {
     vec3 r;
-	vec3 u;
-	vec3 f;
-	vec3 p;
+    vec3 u;
+    vec3 f;
+    vec3 p;
     
 public:
     
     /*
-	Constructor: Spatial
-	Create a spatial.
-	*/
+    Constructor: Spatial
+    Create a spatial.
+    */
     Spatial ();
     
-	/*
-	Constructor: Spatial
+    /*
+    Constructor: Spatial
     Create a spatial.
 
-	Parameters:
+    Parameters:
 
-	position - The spatial's position.
-	target - The point where the spatial is look at.
-	*/
+    position - The spatial's position.
+    target - The point where the spatial is look at.
+    */
     Spatial (const vec3& position, const vec3& target);
     
     virtual ~Spatial() {}
     
-	/*
-	Function: move
+    /*
+    Function: move
     Displace the spatial by the given vector.
-	*/
+    */
     void move (const vec3 &direction);
     
-	/*
-	Function: moveForwards
+    /*
+    Function: moveForwards
     Move the spatial along its local forward vector.
-	*/
+    */
     void moveForwards (float speed);
     
     /*
-	Function: moveBackwards
+    Function: moveBackwards
     Move the spatial along its local backwards vector.
-	*/
+    */
     void moveBackwards (float speed);
     
     /*
-	Function: strafeLeft
+    Function: strafeLeft
     Move the spatial along its local left vector.
-	*/
+    */
     void strafeLeft (float speed);
     
     /*
-	Function: strafeRight
+    Function: strafeRight
     Move the spatial along its local right vector.
-	*/
+    */
     void strafeRight (float speed);
     
     /*
-	Function: moveUp
+    Function: moveUp
     Move the spatial along the global up vector.
-	*/
+    */
     void moveUp (float speed);
     
     /*
-	Function: moveDown
+    Function: moveDown
     Move the spatial along the global down vector.
-	*/
+    */
     void moveDown (float speed);
     
-	/*
-	Function: rotate
+    /*
+    Function: rotate
     Rotate the spatial about the given axis in world space.
     
-	Parameters:
+    Parameters:
 
     angle - The angle of rotation in degrees.
     x - The x coordinate of the axis of rotation.
@@ -94,171 +94,171 @@ public:
     */
     void rotate (float angle, float x, float y, float z);
     
-	/*
-	Function: rotate
+    /*
+    Function: rotate
     Rotate the spatial about the given axis in world space.
     
-	Parameters:
+    Parameters:
 
     angle - The angle of rotation in degrees.
     axis - The axis of rotation.
     */
     void rotate (float angle, vec3 axis) { rotate (angle, axis.x, axis.y, axis.z); }
     
-	/*
-	Function: yaw
+    /*
+    Function: yaw
     Rotate the spatial about its local y axis.
 
-	Parameters:
+    Parameters:
     
     angle - The angle of rotation in degrees.
     */
     void yaw (const float angle);
     
     /*
-	Function: pitch
+    Function: pitch
     Rotate the spatial about its local x axis.
 
-	Parameters:
+    Parameters:
     
     angle - The angle of rotation in degrees.
     */
     void pitch (const float angle);
     
     /*
-	Function: roll
+    Function: roll
     Rotate the spatial about its local z axis.
 
-	Parameters:
+    Parameters:
     
     angle - The angle of rotation in degrees.
     */
     void roll (const float angle);
     
     /*
-	Function: setPosition
-	Set the spatial's position.
-	*/
+    Function: setPosition
+    Set the spatial's position.
+    */
     void setPosition (float x, float y, float z);
     
-	/*
-	Function: setPosition
+    /*
+    Function: setPosition
     Set the spatial's position.
-	*/
+    */
     void setPosition (const vec3 &v);
     
-	/*
-	Function: setForward
+    /*
+    Function: setForward
     Set the spatial's forward vector.
-	*/
+    */
     void setForward (float x, float y, float z);
     
     /*
-	Function: setForward
+    Function: setForward
     Set the spatial's forward vector.
-	*/
+    */
     void setForward (vec3 forward);
 
-	/*
-	Function: setTransform
+    /*
+    Function: setTransform
     Set the spatial's transformation matrix.
-	*/
-	void setTransform (const mat4& transform);
+    */
+    void setTransform (const mat4& transform);
     
     /*
-	Function: lookAt
+    Function: lookAt
     Make the spatial look at the given target.
-	*/
+    */
     void lookAt (float x, float y, float z);
     
     /*
-	Function: lookAt
+    Function: lookAt
     Make the spatial look at the given target.
-	*/
+    */
     void lookAt (const vec3& target);
 
-	/*
-	Function: lookAt
+    /*
+    Function: lookAt
     Make the spatial look at the given target.
-	*/
-	void lookAt (const Spatial&);
+    */
+    void lookAt (const Spatial&);
 
-	/*
-	Function: orbit
+    /*
+    Function: orbit
     Make the spatial orbit around the given target.
 
-	Parameters:
+    Parameters:
 
-	x - Target x coordinate.
-	y - Target y coordinate.
-	z - Target z coordinate.
-	radius - Radial distance.
-	azimuth - Azimuthal (horizontal) angle.
-	zenith - Polar (vertical) angle.
-	*/
-	void orbit (float x, float y, float z, float radius, float azimuth, float zenith);
+    x - Target x coordinate.
+    y - Target y coordinate.
+    z - Target z coordinate.
+    radius - Radial distance.
+    azimuth - Azimuthal (horizontal) angle.
+    zenith - Polar (vertical) angle.
+    */
+    void orbit (float x, float y, float z, float radius, float azimuth, float zenith);
 
-	/*
-	Function: orbit
+    /*
+    Function: orbit
     Make the spatial orbit around the given target.
 
-	Parameters:
+    Parameters:
 
-	target - Target position.
-	radius - Radial distance.
-	azimuth - Azimuthal (horizontal) angle.
-	zenith - Polar (vertical) angle.
-	*/
-	void orbit (const vec3& target, float radius, float azimuth, float zenith);
+    target - Target position.
+    radius - Radial distance.
+    azimuth - Azimuthal (horizontal) angle.
+    zenith - Polar (vertical) angle.
+    */
+    void orbit (const vec3& target, float radius, float azimuth, float zenith);
 
-	/*
-	Function: orbit
+    /*
+    Function: orbit
     Make the spatial orbit around the given target.
 
-	Parameters:
+    Parameters:
 
-	target - Target spatial.
-	radius - Radial distance.
-	azimuth - Azimuthal (horizontal) angle.
-	zenith - Polar (vertical) angle.
-	*/
-	void orbit (const Spatial& target, float radius, float azimuth, float zenith);
+    target - Target spatial.
+    radius - Radial distance.
+    azimuth - Azimuthal (horizontal) angle.
+    zenith - Polar (vertical) angle.
+    */
+    void orbit (const Spatial& target, float radius, float azimuth, float zenith);
     
-	/*
-	Function: pos
+    /*
+    Function: pos
     Return the spatial's position.
-	*/
+    */
     const vec3& pos () const;
     
     /*
-	Function: fwd
+    Function: fwd
     Return the spatial's forward vector.
-	*/
+    */
     const vec3& fwd () const;
     
     /*
-	Function: right
+    Function: right
     Return the spatial's right vector.
-	*/
+    */
     const vec3& right () const;
     
     /*
-	Function: up
+    Function: up
     Return the spatial's up vector.
-	*/
+    */
     const vec3& up () const;
 
-	/*
-	Function: transform
+    /*
+    Function: transform
     Return the spatial's transformation matrix (from spatial to world coordinates).
-	*/
-	mat4 transform () const;
+    */
+    mat4 transform () const;
 
-	/*
-	Function: inverseTransform
+    /*
+    Function: inverseTransform
     Return the spatial's inverse transformation matrix (from world to spatial coordinates).
-	*/
-	mat4 inverseTransform () const;
+    */
+    mat4 inverseTransform () const;
 };
 
 } // namespace OGDT

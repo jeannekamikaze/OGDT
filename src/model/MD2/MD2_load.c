@@ -215,9 +215,9 @@ static void animation_remove_numbers (char* name)
 
 Model_error_code MD2_load (const char* filename, char clockwise, char left_handed, MorphModel* model)
 {
-	long int fileSize;
-	md2Header_t* header;
-	int magic;
+    long int fileSize;
+    md2Header_t* header;
+    int magic;
     FILE*       filePtr;
     vec3*       vertices;
     vec3*       normals;
@@ -225,18 +225,18 @@ Model_error_code MD2_load (const char* filename, char clockwise, char left_hande
     triangle*   triangles;
     skin*       skins;
     animation* animations;
-	animation* currentAnimation;
-	vec3 n;
+    animation* currentAnimation;
+    vec3 n;
     normal_map map;
-	const skin* s;
-	float sw;
+    const skin* s;
+    float sw;
     float sh;
     texCoord_t* texc;
-	triangle* t;
-	frame_t* frame;
-	char* buffer;
-	unsigned start;
-	unsigned numAnimations = 1;
+    triangle* t;
+    frame_t* frame;
+    char* buffer;
+    unsigned start;
+    unsigned numAnimations = 1;
     int currentFrame;
     const I8* name = 0;
     int i;

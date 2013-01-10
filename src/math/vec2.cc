@@ -16,7 +16,7 @@ void vec2::normalise ()
 
 vec2 OGDT::operator- (vec2 a)
 {
-	return vec2 (-a.x, -a.y);
+    return vec2 (-a.x, -a.y);
 }
 
 

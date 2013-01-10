@@ -11,49 +11,49 @@ A vector in 2D space.
 */
 struct DECLDIR vec2
 {
-	/*
-	Variable: x
-	The x coordinate.
-	*/
+    /*
+    Variable: x
+    The x coordinate.
+    */
     float x;
 
-	/*
-	Variable: y
-	The y coordinate.
-	*/
-	float y;
+    /*
+    Variable: y
+    The y coordinate.
+    */
+    float y;
     
-	/*
-	Constructor: vec2
-	Construct a vector and set it to the origin.
-	*/
+    /*
+    Constructor: vec2
+    Construct a vector and set it to the origin.
+    */
     vec2 () : x (0), y (0) {}
     
-	/*
-	Constructor: vec2
-	Construct a vector from the given coordinates.
-	*/
+    /*
+    Constructor: vec2
+    Construct a vector from the given coordinates.
+    */
     vec2 (float _x, float _y) : x (_x), y (_y) {}
     
-	/*
-	Constructor: vec2
-	Construct a vector from the given value.
+    /*
+    Constructor: vec2
+    Construct a vector from the given value.
 
-	The vector's coordinates are all set to the given value.
-	*/
+    The vector's coordinates are all set to the given value.
+    */
     vec2 (float val) : x (val), y (val) {}
     
-	/*
-	Function: normalise
-	Normalise the vector.
-	*/
+    /*
+    Function: normalise
+    Normalise the vector.
+    */
     void normalise ();
 
-	/*
-	operator: const float*
-	Return a const float pointer to the given vector's values.
-	*/
-	operator const float* () const { return (float*) this; }
+    /*
+    operator: const float*
+    Return a const float pointer to the given vector's values.
+    */
+    operator const float* () const { return (float*) this; }
 };
 
 /*

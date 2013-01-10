@@ -139,7 +139,7 @@ const vec2& mat3::v2 () const
 
 mat3 mat3::operator* (const mat3& m)
 {
-	const mat3& a = *this;
+    const mat3& a = *this;
 
     float m00 = a(0,0) * m(0,0) + a(0,1) * m(1,0) + a(0,2) * m(2,0);
     float m01 = a(0,0) * m(0,1) + a(0,1) * m(1,1) + a(0,2) * m(2,1);
@@ -185,21 +185,21 @@ void mat3::operator*= (const mat3& m)
 
 mat3 mat3::transl () const
 {
-	const mat3& m = *this;
-	return mat3
-		(1.0f, 0.0f, m(0,2)
-		,0.0f, 1.0f, m(1,2)
-		,0.0f, 0.0f, 1.0f);
+    const mat3& m = *this;
+    return mat3
+        (1.0f, 0.0f, m(0,2)
+        ,0.0f, 1.0f, m(1,2)
+        ,0.0f, 0.0f, 1.0f);
 }
 
 
 mat3 mat3::rot () const
 {
-	const mat3& m = *this;
-	return mat3
-		(m(0,0), m(0,1), 0.0f
-		,m(1,0), m(1,1), 0.0f
-		,0.0f  , 0.0f  , 1.0f);
+    const mat3& m = *this;
+    return mat3
+        (m(0,0), m(0,1), 0.0f
+        ,m(1,0), m(1,1), 0.0f
+        ,0.0f  , 0.0f  , 1.0f);
 }
 
 

@@ -19,17 +19,17 @@ void leave2D();
 
 
 Font::Font (const char* alphabet_path, int w, int h)
-	: letter_stride (43), alphabet_width (w)
+    : letter_stride (43), alphabet_width (w)
 {
-	Image img;
-	Image::from_file (alphabet_path, img);
-	glGenTextures (1, &tex);
-	glBindTexture (GL_TEXTURE_2D, tex);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	gluBuild2DMipmaps (GL_TEXTURE_2D, GL_ALPHA, w, h, GL_ALPHA, GL_UNSIGNED_BYTE, img);
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glBindTexture (GL_TEXTURE_2D, 0);
+    Image img;
+    Image::from_file (alphabet_path, img);
+    glGenTextures (1, &tex);
+    glBindTexture (GL_TEXTURE_2D, tex);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    gluBuild2DMipmaps (GL_TEXTURE_2D, GL_ALPHA, w, h, GL_ALPHA, GL_UNSIGNED_BYTE, img);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glBindTexture (GL_TEXTURE_2D, 0);
 }
 
 
@@ -54,7 +54,7 @@ void Font::startRender (render_mode mode)
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex);
     
-	this->mode = mode;
+    this->mode = mode;
     if (mode == screen_space) enter2D();
 }
 
@@ -78,7 +78,7 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
     int width  = 0;
     int height = 1;
     int currentWidth = 0;
-	size_t len = strlen (text);
+    size_t len = strlen (text);
     
     const char* ptr = text;
     const char* end = ptr + len;
@@ -108,9 +108,9 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
     
     /*vec3 topLeft = min;
     topLeft.y = max.y;*/
-	float xtl = xmin;
-	float ytl = ymax;
-	float ztl = zmin;
+    float xtl = xmin;
+    float ytl = ymax;
+    float ztl = zmin;
     
     renderText (text, xtl, ytl, ztl, letter_stride, alphabet_width, font_size);
 }
@@ -118,9 +118,9 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
 
 void Font::render (float px, float py, float pz, const char* text, float font_size, draw_style style) const
 {
-	float xpos, ypos, zpos;
+    float xpos, ypos, zpos;
 
-	size_t len = strlen (text);
+    size_t len = strlen (text);
     
     // Compute the text origin.
     switch (style)
@@ -151,18 +151,18 @@ void Font::render (float px, float py, float pz, const char* text, float font_si
         sum += line_size;
         int avg_size = sum / num_lines;
         
-		// pos_ = pos - up3 * font_size * num_lines - right3 * avg_size / 2 * font_size;
+        // pos_ = pos - up3 * font_size * num_lines - right3 * avg_size / 2 * font_size;
         xpos = px - avg_size / 2 * font_size;
-		ypos = py - font_size * num_lines;
-		zpos = pz;
+        ypos = py - font_size * num_lines;
+        zpos = pz;
         break;
     }
         
     case top_left:
         //pos_ = pos - up3 * font_size;
-		xpos = px;
-		ypos = py - font_size;
-		zpos = pz;
+        xpos = px;
+        ypos = py - font_size;
+        zpos = pz;
         break;
         
     default: break;

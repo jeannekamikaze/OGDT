@@ -11,56 +11,56 @@ A vector in 3D space.
 */
 struct DECLDIR vec3
 {
-	/*
-	Variable: x
-	The x coordinate.
-	*/
+    /*
+    Variable: x
+    The x coordinate.
+    */
     float x;
 
-	/*
-	Variable: y
-	The y coordinate.
-	*/
-	float y;
+    /*
+    Variable: y
+    The y coordinate.
+    */
+    float y;
 
-	/*
-	Variable: z
-	The z coordinate.
-	*/
-	float z;
+    /*
+    Variable: z
+    The z coordinate.
+    */
+    float z;
     
-	/*
-	Constructor: vec3
-	Construct a vector and set it to the origin.
-	*/
+    /*
+    Constructor: vec3
+    Construct a vector and set it to the origin.
+    */
     vec3 () : x (0), y (0), z (0) {}
     
-	/*
-	Constructor: vec3
-	Construct a vector from the given coordinates.
-	*/
+    /*
+    Constructor: vec3
+    Construct a vector from the given coordinates.
+    */
     vec3 (float _x, float _y, float _z)
         : x (_x), y (_y), z (_z) {}
     
-	/*
-	Constructor: vec3
-	Construct a vector from the given value.
+    /*
+    Constructor: vec3
+    Construct a vector from the given value.
 
-	The vector's coordinates are all set to the given value.
-	*/
+    The vector's coordinates are all set to the given value.
+    */
     vec3 (float val) : x (val), y (val), z (val) {}
     
-	/*
-	Function: normalise
-	Normalise the vector.
-	*/
+    /*
+    Function: normalise
+    Normalise the vector.
+    */
     void normalise ();
 
-	/*
-	operator: const float*
-	Return a const float pointer to the given vector's values.
-	*/
-	operator const float* () const { return (float*) this; }
+    /*
+    operator: const float*
+    Return a const float pointer to the given vector's values.
+    */
+    operator const float* () const { return (float*) this; }
 };
 
 /*

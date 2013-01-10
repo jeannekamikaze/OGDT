@@ -17,7 +17,7 @@ void vec4::normalise ()
 
 vec4 OGDT::operator- (vec4 a)
 {
-	return vec4 (-a.x, -a.y, -a.z, -a.w);
+    return vec4 (-a.x, -a.y, -a.z, -a.w);
 }
 
 

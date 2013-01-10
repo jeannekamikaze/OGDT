@@ -17,7 +17,7 @@ void vec3::normalise ()
 
 vec3 OGDT::operator- (vec3 v)
 {
-	return vec3 (-v.x, -v.y, -v.z);
+    return vec3 (-v.x, -v.y, -v.z);
 }
 
 
@@ -99,7 +99,7 @@ vec3 OGDT::normalise (vec3 v)
 
 float OGDT::dot (vec3 a, vec3 b)
 {
-	return a.x*b.x + a.y*b.y + a.z*b.z;
+    return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
 

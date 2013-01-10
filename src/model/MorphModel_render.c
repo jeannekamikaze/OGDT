@@ -20,15 +20,15 @@ static void normal_lerp (const vec3* n1, const vec3* n2, float p, vec3* out)
 
 void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame2, float p)
 {
-	triangle* t;
-	texCoord *t1, *t2, *t3;
-	vec3 no1, no2, no3;
-	vec3 p1, p2, p3;
-	vec3 *v11, *v12, *v13;
+    triangle* t;
+    texCoord *t1, *t2, *t3;
+    vec3 no1, no2, no3;
+    vec3 p1, p2, p3;
+    vec3 *v11, *v12, *v13;
     vec3 *v21, *v22, *v23;
-	vec3 *n11, *n12, *n13;
-	vec3 *n21, *n22, *n23;
-	unsigned i;
+    vec3 *n11, *n12, *n13;
+    vec3 *n21, *n22, *n23;
+    unsigned i;
     
     vec3* verts = model->vertices;
     vec3* v1 = verts + frame1 * model->numVertices;
@@ -94,11 +94,11 @@ void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame
 
 void MorphModel_render_static (const MorphModel* model, unsigned int currentFrame)
 {
-	triangle* t;
-	vec3 *v1, *v2, *v3;
-	vec3 *n1, *n2, *n3;
-	texCoord *t1, *t2, *t3;
-	unsigned i;
+    triangle* t;
+    vec3 *v1, *v2, *v3;
+    vec3 *n1, *n2, *n3;
+    texCoord *t1, *t2, *t3;
+    unsigned i;
 
     vec3* v = model->vertices + currentFrame * model->numVertices;
     vec3* n = model->normals + currentFrame * model->numVertices;

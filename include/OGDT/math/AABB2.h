@@ -14,40 +14,40 @@ struct DECLDIR AABB2
 {
     vec2 min, max;
     
-	/*
-	Constructor: AABB2
-	Construct an AABB2 with both vertices set to 0.
-	*/
+    /*
+    Constructor: AABB2
+    Construct an AABB2 with both vertices set to 0.
+    */
     AABB2 () {}
     
-	/*
-	Constructor: AABB2
-	Construct an AABB2 from the given corner points.
+    /*
+    Constructor: AABB2
+    Construct an AABB2 from the given corner points.
 
-	Parameters:
+    Parameters:
 
-	_min - Bottom left corner.
-	_max - Top right corner.
-	*/
+    _min - Bottom left corner.
+    _max - Top right corner.
+    */
     AABB2 (vec2 _min, vec2 _max) : min (_min), max (_max) {}
     
-	/*
-	Constructor: AABB2
-	Construct an AABB2 from the given points.
+    /*
+    Constructor: AABB2
+    Construct an AABB2 from the given points.
 
-	Parameters:
+    Parameters:
 
-	ps - An array of points.
-	n  - The number of points in the array.
-	*/
+    ps - An array of points.
+    n  - The number of points in the array.
+    */
     AABB2 (vec2* ps, unsigned n);
     
-	/*
-	Function: add
-	Update the AABB2 so that it includes the given point.
+    /*
+    Function: add
+    Update the AABB2 so that it includes the given point.
 
-	The AABB2 is resized to contain the given point if it does not already contain it.
-	*/
+    The AABB2 is resized to contain the given point if it does not already contain it.
+    */
     void add (vec2 p);
 };
 
