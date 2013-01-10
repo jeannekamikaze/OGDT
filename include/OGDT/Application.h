@@ -161,9 +161,9 @@ protected:
     /*
     Function: update
     Called every frame.
-	
+    
     Parameters:
-	
+    
     dt - The time elapsed since the last frame, in seconds.
     */
     virtual void update (float dt) {}
