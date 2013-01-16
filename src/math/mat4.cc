@@ -192,7 +192,17 @@ mat4 mat4::rot () const
         ,m(1,0), m(1,1), m(1,2), 0.0f
         ,m(2,0), m(2,1), m(2,2), 0.0f
         ,0.0f  , 0.0f  , 0.0f  , 1.0f
-        );
+         );
+}
+
+
+mat3 mat4::to33 () const
+{
+    const mat4& m = *this;
+    return mat3
+        (m(0,0), m(0,1), m(0,2)
+        ,m(1,0), m(1,1), m(1,2)
+        ,m(2,0), m(2,1), m(2,2));
 }
 
 
@@ -201,7 +211,7 @@ mat4 mat4::rotx (float angle)
     float a = angle * TO_RAD;
     float s = sin (a);
     float c = cos (a);
-    
+
     return mat4
         (1, 0,  0, 0
         ,0, c, -s, 0
@@ -215,7 +225,7 @@ mat4 mat4::roty (float angle)
     float a = angle * TO_RAD;
     float s = sin (a);
     float c = cos (a);
-    
+
     return mat4
         ( c, 0, s, 0
         , 0, 1, 0, 0
@@ -229,7 +239,7 @@ mat4 mat4::rotz (float angle)
     float a = angle * TO_RAD;
     float s = sin (a);
     float c = cos (a);
-    
+
     return mat4
         (c, -s, 0, 0
         ,s,  c, 0, 0
@@ -249,7 +259,7 @@ mat4 mat4::rot (float angle, float x, float y, float z)
     float a = angle * TO_RAD;
     float s = sin (a);
     float c = cos (a);
-    
+
     float xy  = x*y;
     float xz  = x*z;
     float yz  = y*z;
@@ -257,7 +267,7 @@ mat4 mat4::rot (float angle, float x, float y, float z)
     float sy  = s*y;
     float sz  = s*z;
     float omc = 1.0f - c;
-    
+
     return mat4
         (c + omc*x*x, omc*xy-sz, omc*xz+sy, 0
         ,omc*xy+sz,   c+omc*y*y, omc*yz-sx, 0
@@ -365,7 +375,7 @@ mat4 mat4::ortho (float l, float r, float b, float t, float n, float f)
     float tx = -(r+l) / (r-l);
     float ty = -(t+b) / (t-b);
     float tz = -(f+n) / (f-n);
-    
+
     return mat4
         (2/(r-l), 0,        0,       tx
         ,0,       2/(t-b),  0,       ty
@@ -379,7 +389,7 @@ mat4 mat4::perspective (float fovy, float r, float near, float far)
     float f = tan (fovy * TO_RAD / 2.0f);
     f = f == 0.0f ? 1.0f : 1.0f / f;
     float a = near - far;
-    
+
     return mat4
         (f/r, 0,  0,            0
         ,0,   f,  0,            0
@@ -390,136 +400,136 @@ mat4 mat4::perspective (float fovy, float r, float near, float far)
 
 mat4 OGDT::inverse (const mat4& m)
 {
-    float a00 = m[0];
-    float a01 = m[10];
-    float a02 = m[20];
-    float a03 = m[30];
-    float a04 = m[1];
-    float a05 = m[11];
-    float a06 = m[21];
-    float a07 = m[31];
-    float a08 = m[2];
-    float a09 = m[12];
-    float a10 = m[22];
-    float a11 = m[32];
-    float a12 = m[3];
-    float a13 = m[13];
-    float a14 = m[23];
-    float a15 = m[33];
+    float m00 = m[0];
+    float m01 = m[1];
+    float m02 = m[2];
+    float m03 = m[3];
+    float m04 = m[4];
+    float m05 = m[5];
+    float m06 = m[6];
+    float m07 = m[7];
+    float m08 = m[8];
+    float m09 = m[9];
+    float m10 = m[10];
+    float m11 = m[11];
+    float m12 = m[12];
+    float m13 = m[13];
+    float m14 = m[14];
+    float m15 = m[15];
 
-    float m00 = a05 * a10  * a15
-              - a05 * a11  * a14
-              - a09 * a06  * a15
-              + a09 * a07  * a14
-              + a13 * a06  * a11
-              - a13 * a07  * a10;
-        
-    float m04 = -a04 * a10 * a15
-              +  a04 * a11 * a14
-              +  a08 * a06 * a15
-              -  a08 * a07 * a14
-              -  a12 * a06 * a11
-              +  a12 * a07 * a10;
+    float i00 = m05 * m10  * m15
+              - m05 * m11  * m14
+              - m09 * m06  * m15
+              + m09 * m07  * m14
+              + m13 * m06  * m11
+              - m13 * m07  * m10;
 
-    float m08 = a04 * a09 * a15
-              - a04 * a11 * a13
-              - a08 * a05 * a15
-              + a08 * a07 * a13
-              + a12 * a05 * a11
-              - a12 * a07 * a09;
+    float i04 = -m04 * m10 * m15
+              +  m04 * m11 * m14
+              +  m08 * m06 * m15
+              -  m08 * m07 * m14
+              -  m12 * m06 * m11
+              +  m12 * m07 * m10;
 
-    float m12 = -a04 * a09 * a14
-              +  a04 * a10 * a13
-              +  a08 * a05 * a14
-              -  a08 * a06 * a13
-              -  a12 * a05 * a10
-              +  a12 * a06 * a09;
+    float i08 = m04 * m09 * m15
+              - m04 * m11 * m13
+              - m08 * m05 * m15
+              + m08 * m07 * m13
+              + m12 * m05 * m11
+              - m12 * m07 * m09;
 
-    float m01 = -a01 * a10 * a15
-              +  a01 * a11 * a14
-              +  a09 * a02 * a15
-              -  a09 * a03 * a14
-              -  a13 * a02 * a11
-              +  a13 * a03 * a10;
+    float i12 = -m04 * m09 * m14
+              +  m04 * m10 * m13
+              +  m08 * m05 * m14
+              -  m08 * m06 * m13
+              -  m12 * m05 * m10
+              +  m12 * m06 * m09;
 
-    float m05 = a00 * a10 * a15
-              - a00 * a11 * a14
-              - a08 * a02 * a15
-              + a08 * a03 * a14
-              + a12 * a02 * a11
-              - a12 * a03 * a10;
-        
-    float m09 = -a00 * a09 * a15
-              +  a00 * a11 * a13
-              +  a08 * a01 * a15
-              -  a08 * a03 * a13
-              -  a12 * a01 * a11
-              +  a12 * a03 * a09;
+    float i01 = -m01 * m10 * m15
+              +  m01 * m11 * m14
+              +  m09 * m02 * m15
+              -  m09 * m03 * m14
+              -  m13 * m02 * m11
+              +  m13 * m03 * m10;
 
-    float m13 = a00 * a09 * a14
-              - a00 * a10 * a13
-              - a08 * a01 * a14
-              + a08 * a02 * a13
-              + a12 * a01 * a10
-              - a12 * a02 * a09;
+    float i05 = m00 * m10 * m15
+              - m00 * m11 * m14
+              - m08 * m02 * m15
+              + m08 * m03 * m14
+              + m12 * m02 * m11
+              - m12 * m03 * m10;
 
-    float m02 = a01 * a06 * a15
-              - a01 * a07 * a14
-              - a05 * a02 * a15
-              + a05 * a03 * a14
-              + a13 * a02 * a07
-              - a13 * a03 * a06;
+    float i09 = -m00 * m09 * m15
+              +  m00 * m11 * m13
+              +  m08 * m01 * m15
+              -  m08 * m03 * m13
+              -  m12 * m01 * m11
+              +  m12 * m03 * m09;
 
-    float m06 = -a00 * a06 * a15
-              +  a00 * a07 * a14
-              +  a04 * a02 * a15
-              -  a04 * a03 * a14
-              -  a12 * a02 * a07
-              +  a12 * a03 * a06;
+    float i13 = m00 * m09 * m14
+              - m00 * m10 * m13
+              - m08 * m01 * m14
+              + m08 * m02 * m13
+              + m12 * m01 * m10
+              - m12 * m02 * m09;
 
-    float m10 = a00 * a05 * a15
-              - a00 * a07 * a13
-              - a04 * a01 * a15
-              + a04 * a03 * a13
-              + a12 * a01 * a07
-              - a12 * a03 * a05;
+    float i02 = m01 * m06 * m15
+              - m01 * m07 * m14
+              - m05 * m02 * m15
+              + m05 * m03 * m14
+              + m13 * m02 * m07
+              - m13 * m03 * m06;
 
-    float m14 = -a00 * a05 * a14
-              +  a00 * a06 * a13
-              +  a04 * a01 * a14
-              -  a04 * a02 * a13
-              -  a12 * a01 * a06
-              +  a12 * a02 * a05;
+    float i06 = -m00 * m06 * m15
+              +  m00 * m07 * m14
+              +  m04 * m02 * m15
+              -  m04 * m03 * m14
+              -  m12 * m02 * m07
+              +  m12 * m03 * m06;
 
-    float m03 = -a01 * a06 * a11
-              +  a01 * a07 * a10
-              +  a05 * a02 * a11
-              -  a05 * a03 * a10
-              -  a09 * a02 * a07
-              +  a09 * a03 * a06;
+    float i10 = m00 * m05 * m15
+              - m00 * m07 * m13
+              - m04 * m01 * m15
+              + m04 * m03 * m13
+              + m12 * m01 * m07
+              - m12 * m03 * m05;
 
-    float m07 = a00 * a06 * a11
-              - a00 * a07 * a10
-              - a04 * a02 * a11
-              + a04 * a03 * a10
-              + a08 * a02 * a07
-              - a08 * a03 * a06;
+    float i14 = -m00 * m05 * m14
+              +  m00 * m06 * m13
+              +  m04 * m01 * m14
+              -  m04 * m02 * m13
+              -  m12 * m01 * m06
+              +  m12 * m02 * m05;
 
-    float m11 = -a00 * a05 * a11
-              +  a00 * a07 * a09
-              +  a04 * a01 * a11
-              -  a04 * a03 * a09
-              -  a08 * a01 * a07
-              +  a08 * a03 * a05;
+    float i03 = -m01 * m06 * m11
+              +  m01 * m07 * m10
+              +  m05 * m02 * m11
+              -  m05 * m03 * m10
+              -  m09 * m02 * m07
+              +  m09 * m03 * m06;
 
-    float m15 = a00 * a05 * a10
-              - a00 * a06 * a09
-              - a04 * a01 * a10
-              + a04 * a02 * a09
-              + a08 * a01 * a06
-              - a08 * a02 * a05;
-        
-    float det = a00 * m00 + a01 * m04 + a02 * m08 + a03 * m12;
+    float i07 = m00 * m06 * m11
+              - m00 * m07 * m10
+              - m04 * m02 * m11
+              + m04 * m03 * m10
+              + m08 * m02 * m07
+              - m08 * m03 * m06;
+
+    float i11 = -m00 * m05 * m11
+              +  m00 * m07 * m09
+              +  m04 * m01 * m11
+              -  m04 * m03 * m09
+              -  m08 * m01 * m07
+              +  m08 * m03 * m05;
+
+    float i15 = m00 * m05 * m10
+              - m00 * m06 * m09
+              - m04 * m01 * m10
+              + m04 * m02 * m09
+              + m08 * m01 * m06
+              - m08 * m02 * m05;
+
+    float det = m00 * i00 + m01 * i04 + m02 * i08 + m03 * i12;
     if (det == 0)
     {
         return mat4::id;
@@ -528,10 +538,10 @@ mat4 OGDT::inverse (const mat4& m)
     {
         det = 1.0f / det;
         return mat4
-            (m00 * det, m04 * det, m08 * det, m12 * det
-            ,m01 * det, m05 * det, m09 * det, m13 * det
-            ,m02 * det, m06 * det, m10 * det, m14 * det
-            ,m03 * det, m07 * det, m11 * det, m15 * det
+            (i00 * det, i04 * det, i08 * det, i12 * det
+            ,i01 * det, i05 * det, i09 * det, i13 * det
+            ,i02 * det, i06 * det, i10 * det, i14 * det
+            ,i03 * det, i07 * det, i11 * det, i15 * det
             );
     }
 }
@@ -543,7 +553,7 @@ mat4 OGDT::inverse_transform (const mat4& m)
     vec3 u = m.v1 ();
     vec3 f = m.v2 ();
     vec3 t = m.v3 ();
-    
+
     return mat4
         ( r.x , r.y , r.z , -dot(r,t)
         , u.x , u.y , u.z , -dot(u,t)

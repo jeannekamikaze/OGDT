@@ -1,6 +1,7 @@
 #pragma once
 
 #include <OGDT/OGDT.h>
+#include <OGDT/math/mat3.h>
 #include <OGDT/math/vec3.h>
 #include <OGDT/math/vec4.h>
 
@@ -138,6 +139,12 @@ public:
     Return the rotation component of the matrix.
     */
     mat4 rot () const;
+    
+    /*
+    Function: to33
+    Return the upper 3x3 portion of the matrix.
+    */
+    mat3 to33 () const;
     
     /*
     Function: rotx
