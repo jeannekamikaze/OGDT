@@ -59,7 +59,7 @@ void Image::from_file (const char* path, Image& img)
         throw EXCEPTION (os);
     }
     if (img.pixels) stbi_image_free (img.pixels);
-    if (strcmp(ext, "ppm") == 0)
+    if (strcmp(ext, "ppm") == 0 || strcmp(ext, "pgm") == 0)
     {
         img.pixels = read_ppm (path, file, &img.w, &img.h, &img.c);
     }
@@ -161,31 +161,65 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     I32 w, h, max_value;
     fscanf (file, "%d %d %d", &w, &h, &max_value);
     
-    I32 n = w*h*3;
-    U8* pixels = (U8*) malloc (n);
+    U8 c;
+    do
+    {
+        fread (&c, 1, 1, file);
+    }
+    while (c == ' ' || c == '\r' || c == '\n');
+    fseek (file, -1, SEEK_CUR);
     
+    U8* pixels;
     U8 r, g, b;
     
-    if (magic2 == '6')
+    if (magic2 == '6') // Binary ppm
     {
+        I32 n = w*h*3;
+        pixels  = (U8*) malloc (n);
+        *components = 3;
         for (int i = 0; i < n; i += 3)
         {
             fread (&r, 1, 1, file);
             fread (&g, 1, 1, file);
             fread (&b, 1, 1, file);
-            pixels[i] = r;
+            pixels[i]   = r;
             pixels[i+1] = g;
             pixels[i+2] = b;
         }
     }
-    else if (magic2 == '3')
+    else if (magic2 == '3') // Ascii ppm
     {
+        I32 n = w*h*3;
+        pixels  = (U8*) malloc (n);
+        *components = 3;
         for (int i = 0; i < n; i += 3)
         {
             fscanf (file, "%c %c %c", &r, &g, &b);
-            pixels[i] = r;
+            pixels[i]   = r;
             pixels[i+1] = g;
             pixels[i+2] = b;
+        }
+    }
+    else if (magic2 == '5') // Binary pgm
+    {
+        I32 n = w*h;
+        pixels  = (U8*) malloc (n);
+        *components = 1;
+        for (int i = 0; i < n; ++i)
+        {
+            fread (&r, 1, 1, file);
+            pixels[i] = r;
+        }
+    }
+    else if (magic2 == '2') // Ascii pgm
+    {
+        I32 n = w*h;
+        pixels  = (U8*) malloc (n);
+        *components = 3;
+        for (int i = 0; i < n; ++i)
+        {
+            fscanf (file, "%c", &r);
+            pixels[i] = r;
         }
     }
     else
@@ -197,7 +231,6 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     
     *width = w;
     *height = h;
-    *components = 3;
     
     return pixels;
 }

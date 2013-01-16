@@ -7,6 +7,84 @@ namespace OGDT
 {
 
 /*
+Class: TImage
+A type-safe front-end to an image.
+*/
+template <class T, int components>
+class TImage
+{
+    T* p;
+    int w;
+    int h;
+    
+    TImage (const TImage<T,components>&);
+    TImage& operator= (const TImage<T,components>&);
+    
+    friend class Image;
+    
+    TImage (T* _p, int _w, int _h)
+        : p (_p), w (_w), h (_h) {}
+    
+public:
+    
+    int width () const {
+        return w;
+    }
+    
+    int height () const {
+        return h;
+    }
+    
+    T& operator[] (int i) {
+        return *(p+i);
+    }
+    
+    T operator[] (int i) const {
+        return *(p+i);
+    }
+    
+    T& operator() (int row, int col) {
+        return *(p + (row*w + col * components));
+    }
+    
+    T operator() (int row, int col) const {
+        return *(p + (row*w + col * components));
+    }
+    
+    T& r (int row, int col) {
+        return *(p + (row*w + col * components));
+    }
+    
+    T r (int row, int col) const {
+        return *(p + (row*w + col * components));
+    }
+    
+    T& g (int row, int col) {
+        return *(p + (row*w + col * components + 1));
+    }
+    
+    T g (int row, int col) const {
+        return *(p + (row*w + col * components + 1));
+    }
+    
+    T& b (int row, int col) {
+        return *(p + (row*w + col * components + 2));
+    }
+    
+    T b (int row, int col) const {
+        return *(p + (row*w + col * components + 2));
+    }
+    
+    T& a (int row, int col) {
+        return *(p + (row*w + col * components + 3));
+    }
+    
+    T a (int row, int col) const {
+        return *(p + (row*w + col * components + 3));
+    }
+};
+
+/*
 Class: Image
 */
 class DECLDIR Image
@@ -48,6 +126,11 @@ public:
     /*
     Function: from_file
     Read an image from the specified file path.
+    
+    File formats supported:
+    
+    - Those by stbi_image.
+    - Binary/ascii ppm/pgm.
     */
     static void from_file (const char* path, Image&);
     
@@ -65,12 +148,22 @@ public:
     */
     void flipVertically ();
     
+    template <class T, int components>
+    TImage<T,components> coerce () {
+        return TImage<T,components> ((T*) pixels, w, h);
+    }
+    
+    template <class T, int components>
+    const TImage<T,components> coerce () const {
+        return TImage<T,components> ((T*) pixels, w, h);
+    }
+    
     /*
     Operator: ()
     Return a mutable reference to the value at the given position.
     */
     template <class T>
-    T& operator () (int row, int col) {
+    T& elem (int row, int col) {
         return (T&) pixels [(row*w + col) * sizeof(T)];
     }
     
@@ -79,7 +172,7 @@ public:
     Return the value at the given position.
     */
     template <class T>
-    T operator () (int row, int col) const {
+    T elem (int row, int col) const {
         return (T) pixels [(row*w + col) * sizeof(T)];
     }
     
@@ -88,7 +181,7 @@ public:
     Return a mutable reference to the value at the given position.
     */
     template <class T>
-    T& operator [] (int i) {
+    T& ith (int i) {
         return (T&) pixels [i * sizeof(T)];
     }
     
@@ -97,7 +190,7 @@ public:
     Return the value at the given position.
     */
     template <class T>
-    T operator [] (int i) const {
+    T ith (int i) const {
         return (T) pixels [i * sizeof(T)];
     }
     
