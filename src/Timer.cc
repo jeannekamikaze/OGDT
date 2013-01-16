@@ -8,8 +8,9 @@
     #include <Windows.h>
 #else // Linux
     #include <time.h>
-    const double NSEC_TO_SEC = 1.0f/1000000000.0f;
-    const double SEC_TO_NSEC = 1000000000.0f;
+    const double NSEC_TO_SEC = 1.0 / 1000000000.0;
+    const double SEC_TO_NSECd = 1000000000.0;
+    const timeReading SEC_TO_NSEC = 1000000000;
 #endif
 
 
@@ -23,10 +24,9 @@ static void timer_initialise_subsystem ()
     QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
     secondsPerCount = 1.0 / (double)countsPerSec;
 #else
-    /*struct timespec ts;
+    struct timespec ts;
     clock_getres(CLOCK_REALTIME, &ts);
-    secondsPerCount = (double)ts.tv_sec + ((double)ts.tv_nsec * NSEC_TO_SEC);*/
-    secondsPerCount = 1.0f;
+    secondsPerCount = (double)ts.tv_sec + ((double)ts.tv_nsec * NSEC_TO_SEC);
 #endif
 }
 
@@ -37,8 +37,8 @@ void timer_sleep (float seconds)
     Sleep((DWORD)(seconds * 1000));
 #else
     struct timespec ts;
-    ts.tv_sec  = 0;
-    ts.tv_nsec = seconds * SEC_TO_NSEC;
+    ts.tv_sec  = (int) seconds;
+    ts.tv_nsec = (long) ((double)(seconds - (int)seconds) * SEC_TO_NSECd);
     nanosleep(&ts, NULL);
 #endif
 }
@@ -47,7 +47,6 @@ void timer_sleep (float seconds)
 static timeReading now ()
 {
     timeReading t;
-    
 #ifdef __APPLE__
     t = mach_absolute_time();
 #elif WIN32
@@ -55,18 +54,16 @@ static timeReading now ()
 #else
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
-    t = ts.tv_sec + ((double)ts.tv_nsec * NSEC_TO_SEC);
+    t = ts.tv_sec*SEC_TO_NSEC + ts.tv_nsec;
 #endif
-    
     return t;
 }
 
 
 Timer::Timer ()
-    : baseTime (0), pausedTime (0), stopTime (0), prevTime (0)
-    , curTime (0), deltaTime (0), stopped (1)
 {
     timer_initialise_subsystem();
+    reset();
 }
 
 
@@ -89,21 +86,24 @@ void Timer::tick ()
 
     // Force nonnegative. The DXSDK's CDXUTTimer mentions that if the
     // processor goes into a power save mode or we get shuffled to
-    // another processor, then mDeltaTime can be negative.
-    if(deltaTime < 0.0)
+    // another processor, then the delta time can be negative.
+    if(deltaTime < 0.0f)
     {
-        deltaTime = 0.0;
+        deltaTime = 0.0f;
     }
 }
 
 
 void Timer::reset ()
 {
-    curTime = now();
-    baseTime = curTime;
-    prevTime = curTime;
-    stopTime = 0;
-    stopped = 0;
+    timeReading n = now();
+    baseTime = n;
+    stopTime = n;
+    prevTime = n;
+    curTime = n;
+    pausedTime = 0;
+    deltaTime = 0.0f;
+    stopped = true;
 }
 
 
@@ -116,7 +116,7 @@ void Timer::stop ()
         stopTime = now();
 
         // Now we are stopped.
-        stopped = 1;
+        stopped = true;
     }
 }
 
@@ -136,21 +136,34 @@ void Timer::start ()
 
         //Now we are running.
         stopTime = 0;
-        stopped = 0;
+        stopped = false;
     }
 }
 
 
-float Timer::getTime () const
+double Timer::getTime () const
 {
     // If we are stopped, we do not count the time we have been stopped for.
     if (stopped)
     {
-        return (float)((stopTime - baseTime) * secondsPerCount);
+        return (double)((stopTime - baseTime) * secondsPerCount);
     }
-    // Otherwise return the time elapsed since the start of the game without counting the time we have been paused for.
+    // Otherwise return the time elapsed since the start but without
+    // taking into account the time we have been stopped for.
     else
     {
-        return (float)((curTime - baseTime - pausedTime) * secondsPerCount);
+        return (double)((curTime - baseTime - pausedTime) * secondsPerCount);
     }
+}
+
+
+float Timer::getDelta () const
+{
+    return deltaTime;
+}
+
+
+bool Timer::isRunning () const
+{
+    return !stopped;
 }
