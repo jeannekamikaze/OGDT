@@ -1,0 +1,193 @@
+#define BOOST_TEST_MODULE Math
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
+#include <OGDT/math/mat3.h>
+#include <OGDT/math/mat4.h>
+#include <OGDT/math/Spatial.h>
+#include <OGDT/math/utils.h>
+#include <cfloat>
+#include <cstdio>
+
+using namespace OGDT;
+
+bool vec3_eq (vec3 a, vec3 b, float eps, int ULPs)
+{
+    if (!float_eq (a.x, b.x, eps, ULPs)) return false;
+    if (!float_eq (a.y, b.y, eps, ULPs)) return false;
+    if (!float_eq (a.z, b.z, eps, ULPs)) return false;
+    return true;
+}
+
+bool mat3_eq (const mat3& m1, const mat3& m2, float eps, int ULPs)
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            if (!float_eq (m1(i,j), m2(i,j), eps, ULPs)) return false;
+        }
+    }
+    return true;
+}
+
+bool mat4_eq (const mat4& m1, const mat4& m2, float eps, int ULPs)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            if (!float_eq (m1(i,j), m2(i,j), eps, ULPs)) return false;
+        }
+    }
+    return true;
+}
+
+void print_mat4 (const mat4& m)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        printf ("%3.2f, %3.2f, %3.2f, %3.2f\n",
+                m(i,0), m(i,1), m(i,2), m(i,3));
+    }
+    printf ("\n");
+}
+
+void print_mat3 (const mat3& m)
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        printf ("%3.2f, %3.2f, %3.2f\n",
+                m(i,0), m(i,1), m(i,2));
+    }
+    printf ("\n");
+}
+
+BOOST_AUTO_TEST_CASE (float_eq_0)
+{
+    BOOST_REQUIRE (float_eq (0.0f, 0.0f, 0, 0));
+    BOOST_REQUIRE (float_eq (0.0f, -0.0f, 0, 0));
+    BOOST_REQUIRE (float_eq (-0.0f, 0.0f, 0, 0));
+    BOOST_REQUIRE (float_eq (-0.0f, -0.0f, 0, 0));
+}
+
+BOOST_AUTO_TEST_CASE (float_eq_test)
+{
+    BOOST_REQUIRE (float_eq (1.0f, 1.0f + FLT_EPSILON, 123, 1));
+    BOOST_REQUIRE (!float_eq (1.0f, 1.0f + 2*FLT_EPSILON, 123, 1));
+}
+
+BOOST_AUTO_TEST_CASE (mat4_access)
+{
+    mat4 m = mat4
+        (1, 2, 3, 4,
+         5, 6, 7, 8,
+         9, 10, 11, 12,
+         13, 14, 15, 16);
+
+    print_mat4 (m);
+}
+
+BOOST_AUTO_TEST_CASE (mat4_transpose)
+{
+    mat4 m = mat4
+        (1, 2, 3, 4,
+         5, 6, 7, 8,
+         9, 10, 11, 12,
+         13, 14, 15, 16);
+
+    mat4 t = transpose (m);
+    BOOST_REQUIRE (t(0,0) == 1);
+    BOOST_REQUIRE (t(2,3) == 15);
+    BOOST_REQUIRE (t(1,2) == 10);
+}
+
+BOOST_AUTO_TEST_CASE (mat4_inverse)
+{
+    const float eps = FLT_EPSILON;
+    const int ULPs = 2;
+
+    Spatial s;
+    s.setPosition (100.0f, 200.0f, 300.0f);
+    s.yaw (45.0f);
+    s.pitch (90.0f);
+
+    mat4 m1 = s.inverseTransform ();
+    mat4 m2 = inverse (s.transform());
+
+    BOOST_REQUIRE(mat4_eq (m1, m2, eps, ULPs));
+}
+
+BOOST_AUTO_TEST_CASE (mat4_inverse_transform)
+{
+    const float eps = FLT_EPSILON;
+    const int ULPs = 2;
+
+    Spatial s;
+    s.setPosition (17.0f, 35.0f, 54.0f);
+    s.pitch (35.0f);
+    s.yaw (75.0f);
+
+    mat4 t = s.transform();
+    mat4 i1 = inverse(t);
+    mat4 i2 = inverse_transform(t);
+
+    BOOST_REQUIRE (mat4_eq (i1, i2, eps, ULPs));
+}
+
+BOOST_AUTO_TEST_CASE (mat3_transpose)
+{
+    mat3 m = mat3
+        (1, 2, 3,
+         4, 5, 6,
+         7, 8, 9);
+
+    mat3 t = transpose (m);
+    BOOST_REQUIRE (t(0,0) == 1);
+    BOOST_REQUIRE (t(0,1) == 4);
+    BOOST_REQUIRE (t(2,0) == 3);
+}
+
+BOOST_AUTO_TEST_CASE (mat3_inverse)
+{
+    const float eps = FLT_EPSILON;
+    const int ULPs = 1;
+
+    mat3 m = mat3
+        (1, 2, 3,
+         0, 1, 4,
+         5, 6, 0);
+
+    mat3 i = inverse (m);
+    mat3 mm = inverse(i);
+    BOOST_REQUIRE(mat3_eq (m, mm, eps, ULPs));
+
+    print_mat3 (i);
+
+    mat3 id1 = m * i;
+    mat3 id2 = i * m;
+    BOOST_REQUIRE(mat3_eq (mat3::id, id1, eps, ULPs));
+    BOOST_REQUIRE(mat3_eq (mat3::id, id2, eps, ULPs));
+}
+
+BOOST_AUTO_TEST_CASE (normal_matrix)
+{
+    const float eps = FLT_EPSILON;
+    const int ULPs = 1;
+
+    Spatial s;
+    s.setPosition (1, 2, 3);
+    s.yaw (30.0f);
+    s.pitch (47.0f);
+
+    vec3 x_obj = (1,0,0);
+    vec3 y_obj = (0,1,0);
+    vec3 normal_obj = cross (x_obj, y_obj);
+    mat4 m = s.transform() * mat4::scale (1, 2, 3);
+    vec3 x = transform (m, x_obj, 0);
+    vec3 y = transform (m, y_obj, 0);
+    vec3 n1 = normalise (cross (x, y));
+    mat3 normalmat = transpose(inverse(m.to33()));
+    vec3 n2 = normalise (normalmat * cross (x_obj, y_obj));
+
+    BOOST_REQUIRE (vec3_eq (n1, n2, eps, ULPs));
+}
