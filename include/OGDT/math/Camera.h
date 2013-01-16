@@ -15,6 +15,12 @@ class DECLDIR Camera : public Spatial
     mat4 proj;
 
 public:
+    
+    /*
+    Constructor: Camera
+    Default constructor.
+    */
+    Camera () {}
 
     /*
     Constructor: Camera
