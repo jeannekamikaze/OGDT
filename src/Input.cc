@@ -124,3 +124,9 @@ void Input::setMousePosition (int x, int y)
     impl->xmouse = x;
     impl->ymouse = y;
 }
+
+
+int Input::getMouseWheel () const
+{
+    return glfwGetMouseWheel ();
+}

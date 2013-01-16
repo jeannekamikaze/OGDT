@@ -153,7 +153,7 @@ public:
     Input ();
 
     ~Input ();
-    
+
     /*
     Function: poll
     Poll the state of input devices.
@@ -182,6 +182,12 @@ public:
     Set the mouse position.
     */
     void setMousePosition (int x, int y);
+
+    /*
+    Function: getMouseWheel
+    Return the position of the mouse wheel.
+    */
+    int getMouseWheel () const;
 };
 
 } // namespace OGDT
