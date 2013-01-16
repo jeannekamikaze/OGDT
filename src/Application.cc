@@ -42,6 +42,12 @@ void GLFWCALL onMouseMove (int x, int y)
 }
 
 
+void GLFWCALL onMouseWheel (int pos)
+{
+    app->onMouseWheel (pos);
+}
+
+
 void GLFWCALL onKey (int key, int action)
 {
     app->onKey (from_glfw(key), action == GLFW_PRESS);
@@ -73,11 +79,13 @@ void Application::setup (int width, int height, const char* title, int major, in
     }
     glewInit ();
     onInit ();
+    onResize (width, height);
     ::app = this;
     glfwSetWindowTitle (title);
     glfwSetWindowSizeCallback (::onResize);
     glfwSetMouseButtonCallback (::onMouseButton);
     glfwSetMousePosCallback (::onMouseMove);
+    glfwSetMouseWheelCallback (::onMouseWheel);
     glfwSetKeyCallback (::onKey);
     glfwDisable (GLFW_AUTO_POLL_EVENTS);
 }
