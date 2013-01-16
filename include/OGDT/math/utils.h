@@ -27,6 +27,28 @@ namespace OGDT
 {
 
 /*
+Function: float_eq
+Compare two floats for equality.
+
+This function first tests a and b for equality: a == b.
+If the plain equality test fails, the function checks if one of a or b is 0.
+In that case, the function performs a comparison using an absolute error,
+where the error is given by eps: |a-b| <= eps.
+Otherwise an ULP comparison is made, where the maximum ULP distance is given by
+the ULPs parameter: ULP (a-b) <= ULPs.
+
+Parameters:
+
+eps - The error used in the absolute comparison.
+ULPs - The maximum ULP distance used in the ULP comparison.
+
+Returns:
+
+True if the given floats are equal, false otherwise.
+*/
+bool float_eq (float a, float b, float eps, int ULPs);
+
+/*
 Constant: TO_RAD
 Converts degrees to radians.
 */

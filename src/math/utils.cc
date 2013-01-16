@@ -4,6 +4,35 @@
 using namespace OGDT;
 
 
+union Float
+{
+    float f;
+    int i;
+
+    Float (float _f) : f (_f) {}
+
+    bool positive () const { return i >= 0; }
+};
+
+
+bool OGDT::float_eq (float a, float b, float eps, int ULPs)
+{
+    if (a == b) return true;
+    else if (a*b == 0.0f)
+    {
+        return fabs(a-b) <= eps;
+    }
+    else
+    {
+        Float x (a);
+        Float y (b);
+        if (x.positive() != y.positive()) return false;
+        int diff = std::abs (x.i - y.i);
+        return diff <= ULPs;
+    }
+}
+
+
 mat3 OGDT::qmat3 (const quat& q)
 {
     float x = q.x;
