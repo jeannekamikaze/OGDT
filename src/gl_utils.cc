@@ -3,6 +3,7 @@
 #include <OGDT/Image.h>
 #include <cstdio>
 #include <cstring>
+#include <sstream>
 
 
 using namespace OGDT;
@@ -48,19 +49,52 @@ GLuint create_shader (const char* code, GLenum shader_type)
 GLuint create_shader_from_file (const char* path, GLenum shader_type)
 {
     FILE* f = fopen (path, "r");
-
+    if (!f)
+    {
+        std::ostringstream os;
+        os << "Failed opening shader file: " << path;
+        throw EXCEPTION (os);
+    }
+    
     fseek (f, 0, SEEK_END);
     int len = ftell (f);
     fseek (f, 0, SEEK_SET);
-
     char* code = new char [len];
-    memset (code, 0, len);
     fread (code, len, 1, f);
-    GLuint shader = create_shader (code, shader_type);
-    delete[] code;
     fclose (f);
-
-    return shader;
+    
+    const GLuint shader = glCreateShader (shader_type);
+    if (shader)
+    {
+        const GLchar* shader_code[] = {code};
+        const GLint lengths[] = {len};
+        glShaderSource (shader, 1, shader_code, lengths);
+        glCompileShader (shader);
+        delete[] code;
+        GLint result;
+        glGetShaderiv (shader, GL_COMPILE_STATUS, &result);
+        if (result == GL_FALSE)
+        {
+            GLint log_len;
+            glGetShaderiv (shader, GL_INFO_LOG_LENGTH, &log_len);
+            if (log_len > 0)
+            {
+                char* log = new char[log_len];
+                glGetShaderInfoLog (shader, log_len, NULL, log);
+                std::ostringstream os;
+                os << "Failed loading shader file " << path << ": " << log;
+                throw EXCEPTION (os);
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "Failed loading shader file " << path;
+                throw EXCEPTION (os);
+            }
+        }
+        return shader;
+    }
+    else throw EXCEPTION ("glCreateShader failed");
 }
 
 
@@ -128,4 +162,28 @@ GLuint load_texture (const char* path)
     }
     glBindTexture (GL_TEXTURE_2D, 0);
     return tex;
+}
+
+
+GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader)
+{
+    GLuint vs = create_shader_from_file (vertex_shader, GL_VERTEX_SHADER);
+    GLuint fs = create_shader_from_file (fragment_shader, GL_FRAGMENT_SHADER);
+    GLuint prog = create_program (vs, fs);
+    glDeleteShader (vs);
+    glDeleteShader (fs);
+    return prog;
+}
+
+
+GLint get_uniform (GLuint prog, const char* name)
+{
+    GLint loc = glGetUniformLocation (prog, name);
+    if (loc == -1)
+    {
+        std::ostringstream os;
+        os << "Failed getting uniform location: " << name;
+        throw EXCEPTION (os);
+    }
+    return loc;
 }
