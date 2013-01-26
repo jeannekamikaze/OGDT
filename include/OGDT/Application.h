@@ -17,17 +17,11 @@ class DECLDIR Application
     Application (const Application&);
     Application& operator= (const Application&);
 
-    void terminate ();
-
 public:
 
-    Application ();
-
-    virtual ~Application ();
-
     /*
-    Function: setup
-    Start the application.
+    Constructor: Application
+    Create a new application.
 
     Parameters:
 
@@ -37,12 +31,13 @@ public:
     minor - Desired OpenGL context minor version.
     fullscreen - Whether the application should run in fullscreen mode.
     */
-    void setup
-        (int width, int height,
+    Application (int width = 640, int height = 480,
         const char* title = "OGDT Application",
         int major = 1,
         int minor = 1,
         bool fullscreen = false);
+
+    virtual ~Application ();
 
     /*
     Function: run
@@ -77,6 +72,12 @@ public:
     Poll input devices.
     */
     void pollInput ();
+
+    /*
+    Function: setAutoPollInput
+    Set whether the input should be automatically polled.
+    */
+    void setAutoPollInput (bool val);
 
     /*
     Function: setCursorVisible
@@ -151,18 +152,6 @@ public:
     virtual void onKey (Input::code key, bool pressed) {}
 
 protected:
-
-    /*
-    Function: onInit
-    Called during initialisation.
-    */
-    virtual void onInit () {}
-
-    /*
-    Function: onQuit
-    Called on exit.
-    */
-    virtual void onQuit () {}
 
     /*
     Function: update

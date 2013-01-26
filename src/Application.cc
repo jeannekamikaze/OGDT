@@ -10,10 +10,11 @@ using namespace OGDT;
 
 struct Application::_impl
 {
-    bool running;
     Input input;
+    bool running;
+    bool auto_poll;
 
-    _impl () : running (false)
+    _impl () : running (false), auto_poll (true)
     {
     }
 };
@@ -54,19 +55,8 @@ void GLFWCALL onKey (int key, int action)
 }
 
 
-Application::Application () : impl (new _impl)
-{
-}
-
-
-Application::~Application ()
-{
-    if (impl->running) quit ();
-    delete impl;
-}
-
-
-void Application::setup (int width, int height, const char* title, int major, int minor, bool fullscreen)
+Application::Application (int width, int height, const char* title, int major, int minor, bool fullscreen)
+  : impl (new _impl)
 {
     if (!glfwInit()) throw EXCEPTION ("Failed initialising GLFW");
     int mode = fullscreen ? GLFW_FULLSCREEN : GLFW_WINDOW;
@@ -78,8 +68,6 @@ void Application::setup (int width, int height, const char* title, int major, in
         throw EXCEPTION ("glfwOpenWindow failed");
     }
     glewInit ();
-    onInit ();
-    onResize (width, height);
     ::app = this;
     glfwSetWindowTitle (title);
     glfwSetWindowSizeCallback (::onResize);
@@ -91,17 +79,17 @@ void Application::setup (int width, int height, const char* title, int major, in
 }
 
 
-void Application::quit ()
+Application::~Application ()
 {
-    impl->running = false;
+    if (glfwGetWindowParam (GLFW_OPENED)) glfwCloseWindow ();
+    glfwTerminate ();
+    delete impl;
 }
 
 
-void Application::terminate ()
+void Application::quit ()
 {
-    onQuit ();
-    if (glfwGetWindowParam (GLFW_OPENED)) glfwCloseWindow ();
-    glfwTerminate ();
+    impl->running = false;
 }
 
 
@@ -112,6 +100,11 @@ void Application::run ()
     if (running) return;
     running = true;
 
+    // Trigger an initial resize for ease of use.
+    int width, height;
+    glfwGetWindowSize (&width, &height);
+    onResize (width, height);
+
     Timer t;
     t.start ();
 
@@ -119,11 +112,10 @@ void Application::run ()
     {
         t.tick ();
         float dt = t.getDelta();
+        if (impl->auto_poll) impl->input.poll();
         update (dt);
         running = running && glfwGetWindowParam (GLFW_OPENED);
     }
-
-    terminate ();
 }
 
 
@@ -133,6 +125,11 @@ void Application::runCapped (int max_fps)
 
     if (running) return;
     running = true;
+
+    // Trigger an initial resize for ease of use.
+    int width, height;
+    glfwGetWindowSize (&width, &height);
+    onResize (width, height);
 
     float desired_frame_time = 1.0f / (float) max_fps;
 
@@ -148,6 +145,7 @@ void Application::runCapped (int max_fps)
         float dt = frame.getDelta ();
 
         control.tick ();
+        if (impl->auto_poll) impl->input.poll();
         update (dt);
         running = running && glfwGetWindowParam (GLFW_OPENED);
         control.tick ();
@@ -155,8 +153,6 @@ void Application::runCapped (int max_fps)
         float frame_time = control.getDelta ();
         if (frame_time < desired_frame_time) timer_sleep (desired_frame_time - frame_time);
     }
-
-    terminate ();
 }
 
 
@@ -169,6 +165,12 @@ void Application::swapBuffers ()
 void Application::pollInput ()
 {
     impl->input.poll ();
+}
+
+
+void Application::setAutoPollInput (bool val)
+{
+    impl->auto_poll = val;
 }
 
 
