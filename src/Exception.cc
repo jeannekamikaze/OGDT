@@ -1,6 +1,10 @@
 #include <OGDT/Exception.h>
-#include <cstdio>    // printf
-#include <sstream>    // ostringstream
+#include <cstdio>
+#include <sstream>
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 #define EXP_SIZE 1024
 
@@ -11,7 +15,6 @@
 #endif
 
 TLS char exp_buf[EXP_SIZE];
-
 
 using namespace OGDT;
 using namespace std;
