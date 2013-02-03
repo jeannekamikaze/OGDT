@@ -10,6 +10,8 @@
 #include <algorithm>
 #define fmax std::max
 #define fmin std::min
+#else
+#include <cmath>
 #endif
 
 using namespace OGDT;
