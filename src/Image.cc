@@ -158,8 +158,20 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
         throw EXCEPTION (os);
     }
     
-    I32 w, h, max_value;
-    fscanf (file, "%d %d %d", &w, &h, &max_value);
+    I32 w, h;
+    fscanf (file, "%d %d", &w, &h);
+
+    I32 max_value;
+    float scale;
+
+    if (magic2 == 'f' || magic2 == 'F')
+    {
+        fscanf (file, "%f", &scale);
+    }
+    else
+    {
+        fscanf (file, "%d", &scale);
+    }
     
     U8 c;
     do
@@ -175,7 +187,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     if (magic2 == '6') // Binary ppm
     {
         I32 n = w*h*3;
-        pixels  = (U8*) malloc (n);
+        pixels = (U8*) malloc (n);
         *components = 3;
         for (int i = 0; i < n; i += 3)
         {
@@ -190,7 +202,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     else if (magic2 == '3') // Ascii ppm
     {
         I32 n = w*h*3;
-        pixels  = (U8*) malloc (n);
+        pixels = (U8*) malloc (n);
         *components = 3;
         for (int i = 0; i < n; i += 3)
         {
@@ -203,7 +215,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     else if (magic2 == '5') // Binary pgm
     {
         I32 n = w*h;
-        pixels  = (U8*) malloc (n);
+        pixels = (U8*) malloc (n);
         *components = 1;
         for (int i = 0; i < n; ++i)
         {
@@ -214,13 +226,20 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     else if (magic2 == '2') // Ascii pgm
     {
         I32 n = w*h;
-        pixels  = (U8*) malloc (n);
+        pixels = (U8*) malloc (n);
         *components = 3;
         for (int i = 0; i < n; ++i)
         {
             fscanf (file, "%c", &r);
             pixels[i] = r;
         }
+    }
+    else if (magic2 == 'f') // Grayscale pfm
+    {
+        I32 n = w*h;
+        pixels = (U8*) malloc (n * sizeof(float));
+        *components = 1;
+        fread (pixels, sizeof(float), n, file);
     }
     else
     {
