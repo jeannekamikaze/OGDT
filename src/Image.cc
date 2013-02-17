@@ -59,7 +59,7 @@ void Image::from_file (const char* path, Image& img)
         throw EXCEPTION (os);
     }
     if (img.pixels) stbi_image_free (img.pixels);
-    if (strcmp(ext, "ppm") == 0 || strcmp(ext, "pgm") == 0)
+    if (strcmp(ext, "ppm") == 0 || strcmp(ext, "pgm") == 0 || strcmp(ext, "pfm") == 0)
     {
         img.pixels = read_ppm (path, file, &img.w, &img.h, &img.c);
     }
@@ -150,7 +150,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
 {
     int magic1 = fgetc (file);
     int magic2 = fgetc (file);
-    
+
     if (magic1 != 'P')
     {
         std::ostringstream os;
@@ -228,6 +228,8 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
         pixels = (U8*) malloc (n * sizeof(float));
         *components = 1;
         fread (pixels, sizeof(float), n, file);
+        float* p = (float*) pixels;
+        for (int i = 0; i < n; ++i) *p++ *= scale;
     }
     else
     {
