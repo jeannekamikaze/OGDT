@@ -17,9 +17,6 @@ class TImage
     int w;
     int h;
     
-    TImage (const TImage<T,components>&);
-    TImage& operator= (const TImage<T,components>&);
-    
     friend class Image;
     
     TImage (T* _p, int _w, int _h)
