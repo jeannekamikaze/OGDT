@@ -189,15 +189,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
         I32 n = w*h*3;
         pixels = (U8*) malloc (n);
         *components = 3;
-        for (int i = 0; i < n; i += 3)
-        {
-            fread (&r, 1, 1, file);
-            fread (&g, 1, 1, file);
-            fread (&b, 1, 1, file);
-            pixels[i]   = r;
-            pixels[i+1] = g;
-            pixels[i+2] = b;
-        }
+        fread (pixels, sizeof(U8), n, file);
     }
     else if (magic2 == '3') // Ascii ppm
     {
@@ -217,11 +209,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
         I32 n = w*h;
         pixels = (U8*) malloc (n);
         *components = 1;
-        for (int i = 0; i < n; ++i)
-        {
-            fread (&r, 1, 1, file);
-            pixels[i] = r;
-        }
+        fread (pixels, sizeof(U8), n, file);
     }
     else if (magic2 == '2') // Ascii pgm
     {
