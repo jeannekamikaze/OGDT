@@ -31,11 +31,12 @@ public:
     minor - Desired OpenGL context minor version.
     fullscreen - Whether the application should run in fullscreen mode.
     */
-    Application (int width = 640, int height = 480,
-        const char* title = "OGDT Application",
-        int major = 1,
-        int minor = 1,
-        bool fullscreen = false);
+    Application (int width = 640,
+                 int height = 480,
+                 const char* title = "OGDT Application",
+                 int major = 1,
+                 int minor = 1,
+                 bool fullscreen = false);
 
     virtual ~Application ();
 
