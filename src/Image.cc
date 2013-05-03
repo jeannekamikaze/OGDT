@@ -170,7 +170,7 @@ U8* read_ppm (const char* path, FILE* file, int* width, int* height, int* compon
     }
     else
     {
-        fscanf (file, "%d", &scale);
+        fscanf (file, "%f", &scale);
     }
     
     U8 c;
