@@ -22,13 +22,13 @@ using namespace std;
 
 Exception::Exception (const char* what) throw ()
 {
-    snprintf (exp_buf, EXP_SIZE, what);
+    snprintf (exp_buf, EXP_SIZE, "%s", what);
 }
 
 
 Exception::Exception (const std::ostringstream& what) throw ()
 {
-    snprintf (exp_buf, EXP_SIZE, what.str().c_str());
+    snprintf (exp_buf, EXP_SIZE, "%s", what.str().c_str());
 }
 
 
