@@ -1,12 +1,10 @@
 #include <OGDT/Application.h>
 #include <OGDT/Exception.h>
 #include <OGDT/gl.h>
-#include <OGDT/Timer.h>
+#include <OGDT/Timer.hpp>
 #include <GL/glfw.h>
 
-
 using namespace OGDT;
-
 
 struct Application::_impl
 {
@@ -19,41 +17,41 @@ struct Application::_impl
     }
 };
 
-
 static Application* app = 0;
+bool windowCloseRequested = false;
 
 Input::code from_glfw (int c);
 
+int GLFWCALL onWindowClose (void)
+{
+    windowCloseRequested = true;
+    return GL_FALSE;
+}
 
 void GLFWCALL onResize (int width, int height)
 {
     app->onResize (width, height);
 }
 
-
 void GLFWCALL onMouseButton (int button, int action)
 {
     app->onMouseButton (from_glfw(button), action == GLFW_PRESS);
 }
-
 
 void GLFWCALL onMouseMove (int x, int y)
 {
     app->onMouseMove (x, y);
 }
 
-
 void GLFWCALL onMouseWheel (int pos)
 {
     app->onMouseWheel (pos);
 }
 
-
 void GLFWCALL onKey (int key, int action)
 {
     app->onKey (from_glfw(key), action == GLFW_PRESS);
 }
-
 
 Application::Application (int width, int height, const char* title, int major, int minor, bool fullscreen)
   : impl (new _impl)
@@ -75,9 +73,9 @@ Application::Application (int width, int height, const char* title, int major, i
     glfwSetMousePosCallback (::onMouseMove);
     glfwSetMouseWheelCallback (::onMouseWheel);
     glfwSetKeyCallback (::onKey);
+    glfwSetWindowCloseCallback (::onWindowClose);
     glfwDisable (GLFW_AUTO_POLL_EVENTS);
 }
-
 
 Application::~Application ()
 {
@@ -86,12 +84,10 @@ Application::~Application ()
     delete impl;
 }
 
-
 void Application::quit ()
 {
     impl->running = false;
 }
-
 
 void Application::run ()
 {
@@ -114,10 +110,9 @@ void Application::run ()
         float dt = t.getDelta();
         if (impl->auto_poll) impl->input.poll();
         update (dt);
-        running = running && glfwGetWindowParam (GLFW_OPENED);
+        running = running && glfwGetWindowParam (GLFW_OPENED) && !windowCloseRequested;
     }
 }
-
 
 void Application::runCapped (int max_fps)
 {
@@ -147,7 +142,7 @@ void Application::runCapped (int max_fps)
         control.tick ();
         if (impl->auto_poll) impl->input.poll();
         update (dt);
-        running = running && glfwGetWindowParam (GLFW_OPENED);
+        running = running && glfwGetWindowParam (GLFW_OPENED) && !windowCloseRequested;
         control.tick ();
 
         float frame_time = control.getDelta ();
@@ -155,24 +150,20 @@ void Application::runCapped (int max_fps)
     }
 }
 
-
 void Application::swapBuffers ()
 {
     glfwSwapBuffers ();
 }
-
 
 void Application::pollInput ()
 {
     impl->input.poll ();
 }
 
-
 void Application::setAutoPollInput (bool val)
 {
     impl->auto_poll = val;
 }
-
 
 void Application::setCursorVisible (bool val)
 {
@@ -180,31 +171,26 @@ void Application::setCursorVisible (bool val)
     else     glfwDisable (GLFW_MOUSE_CURSOR);
 }
 
-
 void Application::setKeyRepeat (bool val)
 {
     if (val) glfwEnable  (GLFW_KEY_REPEAT);
     else     glfwDisable (GLFW_KEY_REPEAT);
 }
 
-
 Input& Application::getInput ()
 {
     return impl->input;
 }
-
 
 const Input& Application::getInput () const
 {
     return impl->input;
 }
 
-
 bool Application::isRunning () const
 {
     return impl->running;
 }
-
 
 Input::code from_glfw (int c)
 {
