@@ -1,9 +1,7 @@
 #include <OGDT/math/vec3.h>
 #include <cmath>
 
-
 using namespace OGDT;
-
 
 void vec3::normalise ()
 {
@@ -14,36 +12,30 @@ void vec3::normalise ()
     z /= n;
 }
 
-
 vec3 OGDT::operator- (vec3 v)
 {
     return vec3 (-v.x, -v.y, -v.z);
 }
-
 
 vec3 OGDT::operator+ (vec3 a, vec3 b)
 {
     return vec3 (a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-
 vec3 OGDT::operator- (vec3 a, vec3 b)
 {
     return vec3 (a.x - b.x, a.y - b.y, a.z - b.z);
 }
-
 
 vec3 OGDT::operator* (vec3 a, vec3 b)
 {
     return vec3 (a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
-
 vec3 OGDT::operator/ (vec3 a, vec3 b)
 {
     return vec3 (a.x / b.x, a.y / b.y, a.z / b.z);
 }
-
 
 void OGDT::operator += (vec3& a, vec3 b)
 {
@@ -52,14 +44,12 @@ void OGDT::operator += (vec3& a, vec3 b)
     a.z += b.z;
 }
 
-
 void OGDT::operator -= (vec3& a, vec3 b)
 {
     a.x -= b.x;
     a.y -= b.y;
     a.z -= b.z;
 }
-
 
 void OGDT::operator *= (vec3& a, vec3 b)
 {
@@ -68,7 +58,6 @@ void OGDT::operator *= (vec3& a, vec3 b)
     a.z *= b.z;
 }
 
-
 void OGDT::operator /= (vec3& a, vec3 b)
 {
     a.x /= b.x;
@@ -76,18 +65,15 @@ void OGDT::operator /= (vec3& a, vec3 b)
     a.z /= b.z;
 }
 
-
 float OGDT::norm (vec3 v)
 {
     return sqrt (v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-
 float OGDT::norm2 (vec3 v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
-
 
 vec3 OGDT::normalise (vec3 v)
 {
@@ -96,12 +82,10 @@ vec3 OGDT::normalise (vec3 v)
     return vec3 (v.x / n, v.y / n, v.z / n);
 }
 
-
 float OGDT::dot (vec3 a, vec3 b)
 {
     return a.x*b.x + a.y*b.y + a.z*b.z;
 }
-
 
 vec3 OGDT::cross (vec3 a, vec3 b)
 {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 namespace OGDT
 {
 
@@ -11,7 +9,7 @@ struct Animation;
  * Class: Model
  * A static or animated 3D model.
  */
-class DECLDIR Model
+class Model
 {
     struct _impl;
     _impl* impl;
@@ -28,7 +26,7 @@ public:
     Model (const char* path);
 
     ~Model ();
-    
+
     /*
      * Function: render
      * Render the model.

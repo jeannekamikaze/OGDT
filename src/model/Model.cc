@@ -4,7 +4,7 @@
 #include "MorphModel_render.h"
 #include "MD2/MD2_load.h"
 #include <OGDT/Exception.h>
-#include <OGDT/gl_utils.h>
+#include <OGDT/gl_utils.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -205,7 +205,7 @@ Model::Model (const char* path) : impl (new _impl)
     if (ext == "md2" ||ext == "MD2")
     {
         load_md2 (path, impl->morph_model);
-        
+
         unsigned n = impl->morph_model->numAnimations;
         impl->animations.reserve (n);
 
@@ -282,13 +282,13 @@ void Model::pitch (float angle)
     if (impl->morph_model) model_pitch (impl->morph_model, angle);
 }
 
-    
+
 void Model::yaw (float angle)
 {
     if (impl->morph_model) model_yaw (impl->morph_model, angle);
 }
 
-    
+
 void Model::roll (float angle)
 {
     if (impl->morph_model) model_roll (impl->morph_model, angle);

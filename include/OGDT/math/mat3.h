@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 namespace OGDT
 {
 
@@ -12,7 +10,7 @@ struct vec3;
 Class: mat3
 A column-major 3x3 matrix.
 */
-class DECLDIR mat3
+class mat3
 {
     float val[3][3];
 
@@ -204,9 +202,9 @@ public:
     static const mat3 id;
 };
 
-DECLDIR mat3 inverse (const mat3&);
+mat3 inverse (const mat3&);
 
-DECLDIR mat3 transpose (const mat3&);
+mat3 transpose (const mat3&);
 
 vec3 operator* (const mat3&, vec3);
 

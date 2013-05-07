@@ -1,6 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
 #include <OGDT/math/mat3.h>
 #include <OGDT/math/mat4.h>
 #include <OGDT/math/quat.h>
@@ -64,30 +63,30 @@ const float TO_DEG = 180.0f / M_PI;
 Function: qmat3
 Constructs a 3x3 matrix representing the same rotation as the given quaternion.
 */
-DECLDIR mat3 qmat3 (const quat& q);
+mat3 qmat3 (const quat& q);
 
 /*
 Function: qmat3
 Constructs a 4x4 matrix representing the same rotation as the given quaternion.
 */
-DECLDIR mat4 qmat4 (const quat& q);
+mat4 qmat4 (const quat& q);
 
 /*
 Function: sign
 Return the sign of the given value.
 */
-DECLDIR float sign (float x);
+float sign (float x);
 
 /*
 Function: pitch_from_fwd
 Return the pitch formed by the given forward vector.
 */
-DECLDIR float pitch_from_fwd (vec3 forward);
+float pitch_from_fwd (vec3 forward);
 
 /*
 Function: yaw_from_fwd
 Return the yaw formed by the given forward vector.
 */
-DECLDIR float yaw_from_fwd (vec3 forward);
+float yaw_from_fwd (vec3 forward);
 
 } // namespace OGDT

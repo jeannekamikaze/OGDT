@@ -1,6 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
 #include <OGDT/math/mat3.h>
 #include <OGDT/math/vec3.h>
 #include <OGDT/math/vec4.h>
@@ -12,18 +11,18 @@ namespace OGDT
 Class: mat4
 A 4x4 column-major matrix.
 */
-class DECLDIR mat4
+class mat4
 {
     float val[4][4];
-    
+
 public:
-    
+
     /*
     Constructor: mat4
     Construct a matrix and set it to the identity.
     */
     mat4 ();
-    
+
     /*
     Constructor: mat4
     Construct a matrix from the given values.
@@ -32,18 +31,18 @@ public:
          ,float m01, float m11, float m21, float m31
          ,float m02, float m12, float m22, float m32
          ,float m03, float m13, float m23, float m33);
-    
+
     /*
     Constructor: mat4
     Construct a matrix from the given vectors.
-    
+
     Each of the vectors represents a column of the matrix.
     */
     mat4 (const vec4& v0
          ,const vec4& v1
          ,const vec4& v2
          ,const vec4& v3);
-    
+
     /*
     Constructor: mat4
     Construct a transformation matrix from the given vectors.
@@ -55,7 +54,7 @@ public:
     Return a mutable reference to the value at the specified position.
     */
     float& operator () (int row, int col);
-    
+
     /*
     Operator: ()
     Access the value at the specified position.
@@ -67,55 +66,55 @@ public:
     Return a mutable reference to the matrix's first column.
     */
     vec3& v0 ();
-    
+
     /*
     Function: v1
     Return a mutable reference to the matrix's second column.
     */
     vec3& v1 ();
-    
+
     /*
     Function: v2
     Return a mutable reference to the matrix's third column.
     */
     vec3& v2 ();
-    
+
     /*
     Function: v3
     Return a mutable reference to the matrix's fourth column.
     */
     vec3& v3 ();
-    
+
     /*
     Function: v0
     Return the matrix's first column.
     */
     const vec3& v0 () const;
-    
+
     /*
     Function: v1
     Return the matrix's second column.
     */
     const vec3& v1 () const;
-    
+
     /*
     Function: v2
     Return the matrix's third column.
     */
     const vec3& v2 () const;
-    
+
     /*
     Function: v3
     Return an immutable reference to the matrix's fourth column.
     */
     const vec3& v3 () const;
-    
+
     /*
     Operator: *
     Multiply two matrices.
     */
-    mat4 operator* (const mat4&);
-    
+    mat4 operator* (const mat4&) const;
+
     /*
     Operator: *=
     Multiply two matrices and accumulate the result in the first operand.
@@ -139,13 +138,13 @@ public:
     Return the rotation component of the matrix.
     */
     mat4 rot () const;
-    
+
     /*
     Function: to33
     Return the upper 3x3 portion of the matrix.
     */
     mat3 to33 () const;
-    
+
     /*
     Function: rotx
     Create an X-axis rotation matrix.
@@ -155,7 +154,7 @@ public:
     angle - The angle of rotation in degrees.
     */
     static mat4 rotx (float angle);
-    
+
     /*
     Function: roty
     Create a Y-axis rotation matrix.
@@ -165,7 +164,7 @@ public:
     angle - The angle of rotation in degrees.
     */
     static mat4 roty (float angle);
-    
+
     /*
     Function: rotz
     Create a Z-axis rotation matrix.
@@ -175,7 +174,7 @@ public:
     angle - The angle of rotation in degrees.
     */
     static mat4 rotz (float angle);
-    
+
     /*
     Function: rot
     Create a rotation matrix.
@@ -186,7 +185,7 @@ public:
     axis  - The axis of rotation.
     */
     static mat4 rot (float angle, const vec3& axis);
-    
+
     /*
     Function: rot
     Create a rotation matrix.
@@ -197,17 +196,17 @@ public:
     z - Z component of the axis of rotation.
     */
     static mat4 rot (float angle, float x, float y, float z);
-    
+
     /*
     Function: scale
     Create a scale matrix.
-    
+
     Parameters:
 
     s - A vector specifying the scale factor on each axis.
     */
     static mat4 scale (const vec3& s);
-    
+
     /*
     Function: scale
     Create a scale matrix.
@@ -219,7 +218,7 @@ public:
     sz - The scale factor on the Z axis.
     */
     static mat4 scale (float sx, float sy, float sz);
-    
+
     /*
     Function: transl
     Create a translation matrix.
@@ -229,7 +228,7 @@ public:
     offset - A vector specifying the translation along each axis.
     */
     static mat4 transl (const vec3& offset);
-    
+
     /*
     Function: transl
     Create a translation matrix.
@@ -241,19 +240,19 @@ public:
     z - The amount of translation along the Z axis.
     */
     static mat4 transl (float x, float y, float z);
-    
+
     /*
     Constant: reflectx
     The X-axis reflection matrix.
     */
     static const mat4 reflectx;
-    
+
     /*
     Constant: reflecty
     The Y-axis reflection matrix.
     */
     static const mat4 reflecty;
-    
+
     /*
     Constant: reflectz
     The Z-axis reflection matrix.
@@ -271,7 +270,7 @@ public:
     Create a transformation matrix from the given forward vector.
     */
     static mat4 transform (vec3 forward);
-    
+
     /*
     Function: lookAt
     Create a transformation matrix.
@@ -282,7 +281,7 @@ public:
     target - The point the object is looking at.
     */
     static mat4 lookAt (const vec3& position, const vec3& target);
-    
+
     /*
     Function: ortho
     Create an orthographic projection matrix.
@@ -297,7 +296,7 @@ public:
     far - The distance to the far clipping plane.
     */
     static mat4 ortho (float left, float right, float bottom, float top, float near, float far);
-    
+
     /*
     Function: perspective
     Create a perspective projection matrix.
@@ -312,12 +311,12 @@ public:
     static mat4 perspective (float fovy, float aspect, float near, float far);
 };
 
-DECLDIR mat4 inverse (const mat4& m);
+mat4 inverse (const mat4& m);
 
-DECLDIR mat4 inverse_transform (const mat4& m);
+mat4 inverse_transform (const mat4& m);
 
-DECLDIR mat4 transpose (const mat4& m);
+mat4 transpose (const mat4& m);
 
-DECLDIR vec3 transform (const mat4&, vec3, float w);
+vec3 transform (const mat4&, vec3, float w);
 
 } // namespace OGDT

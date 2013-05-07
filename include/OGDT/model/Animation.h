@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 namespace OGDT
 {
 
@@ -9,7 +7,7 @@ namespace OGDT
 Struct: Animation
 A model animation.
 */
-struct DECLDIR Animation
+struct Animation
 {
     /*
     Variable: name

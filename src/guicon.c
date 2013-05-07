@@ -10,15 +10,10 @@
     #include <fstream>
 #endif
 
-
-#ifndef _USE_OLD_IOSTREAMS
-using namespace std;
-#endif
-
-
 void open_console (int console_lines)
 {
 #if defined(OGDT_DEBUG) && defined(WIN32)
+    console_lines = console_lines == 0 ? 1024 : console_lines;
     int hConHandle;
     long lStdHandle;
     CONSOLE_SCREEN_BUFFER_INFO coninfo;

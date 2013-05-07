@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 namespace OGDT
 {
 
@@ -11,14 +9,14 @@ class Model;
  * Class: ModelInstance
  * A Model instance.
  */
-class DECLDIR ModelInstance
+class ModelInstance
 {
     struct _impl;
     _impl* impl;
 
     ModelInstance (const ModelInstance&);
     ModelInstance& operator= (const ModelInstance&);
-    
+
 public:
 
     /*
