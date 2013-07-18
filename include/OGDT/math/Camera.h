@@ -1,5 +1,6 @@
 #pragma once
 
+#include <OGDT/OGDT.h>
 #include <OGDT/math/Spatial.h>
 #include <OGDT/math/mat4.h>
 
@@ -9,12 +10,12 @@ namespace OGDT
 /*
 Class: Camera
 */
-class Camera : public Spatial
+class DECLDIR Camera : public Spatial
 {
     mat4 proj;
 
 public:
-
+    
     /*
     Constructor: Camera
     Default constructor.
@@ -42,3 +43,4 @@ public:
 };
 
 } // namespace OGDT
+

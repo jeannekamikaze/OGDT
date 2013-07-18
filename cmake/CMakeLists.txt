@@ -1,7 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
 
-set (BUILD_OGDT_CPLUS True CACHE BOOL "Build the C++ version of the library")
-
 set (CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
 set (OGDT_AVOID_NORMALISATION False CACHE BOOL "Turn off vector normalisations for improved speed")
 set (CMAKE_DEBUG_POSTFIX "d")
@@ -28,19 +26,10 @@ FIND_LIBRARY (glfw glfw)
 			"To-do: Make glfw an optional dependency.")
 	ENDIF (glfw STREQUAL glfw-NOTFOUND)
 
-set (CMAKE_C_FLAGS "-std=gnu99")
 include_directories (../include)
-file (GLOB_RECURSE SOURCES ../src/*.c)
+file (GLOB_RECURSE SOURCES ../src/*.cc ../src/*.c)
 add_library (OGDT STATIC ${SOURCES})
+
+set (CMAKE_CXX_FLAGS "--std=c++0x")
 set (LIBRARY_OUTPUT_PATH "../bin")
-
-IF (BUILD_OGDT_CPLUS)
-	project (OGDTp)
-
-	include_directories (../include)
-	file (GLOB_RECURSE SOURCES ../src/*.cc ../src/*.c)
-	add_library (OGDTp STATIC ${SOURCES})
-	set (CMAKE_CXX_FLAGS "--std=c++0x")
-	set (LIBRARY_OUTPUT_PATH "../bin")
-ENDIF (BUILD_OGDT_CPLUS)
 

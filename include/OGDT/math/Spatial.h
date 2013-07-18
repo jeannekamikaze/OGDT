@@ -1,5 +1,6 @@
 #pragma once
 
+#include <OGDT/OGDT.h>
 #include <OGDT/math/mat4.h>
 #include <OGDT/math/vec3.h>
 
@@ -10,7 +11,7 @@ namespace OGDT
 Class: Spatial
 An object in 3D space.
 */
-class Spatial
+class DECLDIR Spatial
 {
     vec3 r;
     vec3 u;

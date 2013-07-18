@@ -13,7 +13,9 @@
     const timeReading SEC_TO_NSEC = 1000000000;
 #endif
 
+
 static double secondsPerCount;
+
 
 static void timer_initialise_subsystem ()
 {
@@ -27,6 +29,20 @@ static void timer_initialise_subsystem ()
     secondsPerCount = (double)ts.tv_sec + ((double)ts.tv_nsec * NSEC_TO_SEC);
 #endif
 }
+
+
+void timer_sleep (float seconds)
+{
+#ifdef WIN32
+    Sleep((DWORD)(seconds * 1000));
+#else
+    struct timespec ts;
+    ts.tv_sec  = (int) seconds;
+    ts.tv_nsec = (long) ((double)(seconds - (int)seconds) * SEC_TO_NSECd);
+    nanosleep(&ts, NULL);
+#endif
+}
+
 
 static timeReading now ()
 {
@@ -43,115 +59,111 @@ static timeReading now ()
     return t;
 }
 
-void timer_init (Timer* timer)
+
+Timer::Timer ()
 {
     timer_initialise_subsystem();
-    timer_reset (timer);
+    reset();
 }
 
-void timer_tick (Timer* timer)
+
+void Timer::tick ()
 {
-    if (timer->stopped)
+    if (stopped)
     {
-        timer->deltaTime = 0.0;
+        deltaTime = 0.0;
         return;
     }
 
     //Get the time on this frame.
-    timer->curTime = now();
+    curTime = now();
 
     //Time delta between the current frame and the previous.
-    timer->deltaTime = (float) ((timer->curTime - timer->prevTime) * secondsPerCount);
+    deltaTime = (float) ((curTime - prevTime) * secondsPerCount);
 
     //Update for next frame.
-    timer->prevTime = timer->curTime;
+    prevTime = curTime;
 
     // Force nonnegative. The DXSDK's CDXUTTimer mentions that if the
     // processor goes into a power save mode or we get shuffled to
     // another processor, then the delta time can be negative.
-    if(timer->deltaTime < 0.0f)
+    if(deltaTime < 0.0f)
     {
-        timer->deltaTime = 0.0f;
+        deltaTime = 0.0f;
     }
 }
 
-void timer_reset (Timer* timer)
+
+void Timer::reset ()
 {
     timeReading n = now();
-    timer->baseTime = n;
-    timer->stopTime = n;
-    timer->prevTime = n;
-    timer->curTime = n;
-    timer->pausedTime = 0;
-    timer->deltaTime = 0.0f;
-    timer->stopped = 1;
+    baseTime = n;
+    stopTime = n;
+    prevTime = n;
+    curTime = n;
+    pausedTime = 0;
+    deltaTime = 0.0f;
+    stopped = true;
 }
 
-void timer_stop (Timer* timer)
+
+void Timer::stop ()
 {
     // Don't do anything if we are already stopped.
-    if (!timer->stopped)
+    if (!stopped)
     {
         // Grab the stop time.
-        timer->stopTime = now();
+        stopTime = now();
 
         // Now we are stopped.
-        timer->stopped = 1;
+        stopped = true;
     }
 }
 
-void timer_start (Timer* timer)
+
+void Timer::start ()
 {
     // Only start if we are stopped.
-    if (timer->stopped)
+    if (stopped)
     {
         timeReading startTime = now();
 
         // Accumulate the paused time.
-        timer->pausedTime = timer->pausedTime + startTime - timer->stopTime;
+        pausedTime = pausedTime + startTime - stopTime;
 
         // Make the previous time valid.
-        timer->prevTime = startTime;
+        prevTime = startTime;
 
         //Now we are running.
-        timer->stopTime = 0;
-        timer->stopped = 0;
+        stopTime = 0;
+        stopped = false;
     }
 }
 
-double timer_get_time (const Timer* timer)
+
+double Timer::getTime () const
 {
     // If we are stopped, we do not count the time we have been stopped for.
-    if (timer->stopped)
+    if (stopped)
     {
-        return (double)((timer->stopTime - timer->baseTime) * secondsPerCount);
+        return (double)((stopTime - baseTime) * secondsPerCount);
     }
     // Otherwise return the time elapsed since the start but without
     // taking into account the time we have been stopped for.
     else
     {
-        return (double)((timer->curTime - timer->baseTime - timer->pausedTime) * secondsPerCount);
+        return (double)((curTime - baseTime - pausedTime) * secondsPerCount);
     }
 }
 
-float timer_get_delta (const Timer* timer)
+
+float Timer::getDelta () const
 {
-    return timer->deltaTime;
+    return deltaTime;
 }
 
-char timer_is_running (const Timer* timer)
-{
-    return !timer->stopped;
-}
 
-void timer_sleep (float seconds)
+bool Timer::isRunning () const
 {
-#ifdef WIN32
-    Sleep((DWORD)(seconds * 1000));
-#else
-    struct timespec ts;
-    ts.tv_sec  = (int) seconds;
-    ts.tv_nsec = (long) ((double)(seconds - (int)seconds) * SEC_TO_NSECd);
-    nanosleep(&ts, NULL);
-#endif
+    return !stopped;
 }

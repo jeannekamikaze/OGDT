@@ -1,5 +1,7 @@
 #pragma once
 
+#include <OGDT/OGDT.h>
+
 namespace OGDT
 {
 
@@ -7,7 +9,7 @@ namespace OGDT
 Struct: vec4
 A vector in 4D space.
 */
-struct vec4
+struct DECLDIR vec4
 {
     /*
     Variable: x
@@ -32,20 +34,20 @@ struct vec4
     The w coordinate.
     */
     float w;
-
+    
     /*
     Constructor: vec4
     Construct a vector and set it to the origin.
     */
     vec4 () : x (0), y (0), z (0), w (0) {}
-
+    
     /*
     Constructor: vec4
     Construct a vector from the given coordinates.
     */
     vec4 (float _x, float _y, float _z, float _w)
         : x (_x), y (_y), z (_z), w (_w) {}
-
+    
     /*
     Constructor: vec4
     Construct a vector from the given value.
@@ -71,66 +73,66 @@ struct vec4
 Operator: -
 Negate the given vector.
 */
-vec4 operator- (vec4);
+DECLDIR vec4 operator- (vec4);
 
 /*
 Operator: +
 Add two vectors.
 */
-vec4 operator+ (vec4, vec4);
+DECLDIR vec4 operator+ (vec4, vec4);
 
 /*
 Operator: -
 Subtract two vectors.
 */
-vec4 operator- (vec4, vec4);
+DECLDIR vec4 operator- (vec4, vec4);
 
 /*
 Operator: *
 Modulate two vectors (component-wise multiplication).
 */
-vec4 operator* (vec4, vec4);
+DECLDIR vec4 operator* (vec4, vec4);
 
 /*
 Operator: /
 Divide two vectors component-wise.
 */
-vec4 operator/ (vec4, vec4);
+DECLDIR vec4 operator/ (vec4, vec4);
 
 /*
 Operator: +=
 Add two vectors.
 */
-void operator += (vec4&, vec4);
+DECLDIR void operator += (vec4&, vec4);
 
 /*
 Operator: -
 Subtract two vectors.
 */
-void operator -= (vec4&, vec4);
+DECLDIR void operator -= (vec4&, vec4);
 
 /*
 Operator: *=
 Modulate two vectors (component-wise multiplication).
 */
-void operator *= (vec4&, vec4);
+DECLDIR void operator *= (vec4&, vec4);
 
 /*
 Operator: /=
 Divide two vectors component-wise.
 */
-void operator /= (vec4&, vec4);
+DECLDIR void operator /= (vec4&, vec4);
 
 /*
 Function: norm
 Return the vector's magnitude.
 */
-float norm (vec4 v);
+DECLDIR float norm (vec4 v);
 
 /*
 Function: norm2
 Return the vector's squared magnitude.
 */
-float norm2 (vec4 v);
+DECLDIR float norm2 (vec4 v);
 
 } // namespace OGDT

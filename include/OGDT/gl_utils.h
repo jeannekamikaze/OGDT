@@ -1,94 +1,73 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#else
+#include <OGDT/OGDT.h>
 #include <OGDT/gl.h>
-#endif
 
 /*
-  Header: gl_utils
+File: gl_utils
 */
 
 /*
-  Function: create_shader
-  Create a shader from the given source code string.
+Function: create_shader
+Create a shader from the given source code string.
 
-  Parameters:
+Parameters:
 
-  code - The source code string.
-  shader_type - The shader type.
-  err - Output error string. 0 on success, non-zero otherwise.
+code - The source code string.
+shader_type - The shader type as specified by OpenGL.
 
-  Returns:
+Returns:
 
-  A compiled OpenGL shader.
+A compiled OpenGL shader.
 */
-GLuint create_shader (const char* code, GLenum shader_type, const char** err);
+DECLDIR GLuint create_shader (const char* code, GLenum shader_type);
+
+DECLDIR GLuint create_shader_from_file (const char* path, GLenum shader_type);
 
 /*
-  Function: create_shader_from_file
-  Load a shader from the specified file.
+Function: create_program
+Create and link a shader program from the given shader soure codes.
 
-  Parameters:
+Parameters:
 
-  path - The path to the shader file.
-  shader_type - The shader type.
-  err - Output error string. 0 on success, non-zero otherwise.
+vertex_shader - The vertex shader code.
+fragment_shader - The fragment shader code.
 
-  Returns:
+Returns:
 
-  A compiled OpenGL shader.
+A linked shader program.
 */
-GLuint create_shader_from_file (const char* path, GLenum shader_type, const char** err);
+DECLDIR GLuint create_program (GLuint vertex_shader, GLuint fragment_shader);
 
 /*
-  Function: create_program
-  Create and link a shader program from the given shader soure codes.
+Function: create_program
+Create and link a shader program from the given shader files.
 
-  Parameters:
+Parameters:
 
-  vertex_shader - The vertex shader code.
-  fragment_shader - The fragment shader code.
-  err - Output error string. 0 on success, non-zero otherwise.
+vertex_shader - The path to the vertex shader file.
+fragment_shader - The path to the fragment shader file.
 
-  Returns:
+Returns:
 
-  A linked shader program.
+A linked shader program.
 */
-GLuint create_program (GLuint vertex_shader, GLuint fragment_shader, const char** err);
+DECLDIR GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader);
 
 /*
-  Function: create_program
-  Create and link a shader program from the given shader files.
+Function: load_texture
+Load the texture from the specified file path.
 
-  Parameters:
+Returns:
 
-  vertex_shader - The path to the vertex shader file.
-  fragment_shader - The path to the fragment shader file.
-  err - Output error string. 0 on success, non-zero otherwise.
-
-  Returns:
-
-  A linked shader program.
+An OpenGL texture identifier.
 */
-GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader, const char** err);
+DECLDIR GLuint load_texture (const char* path);
 
 /*
-  Function: load_texture
-  Load the texture from the specified file path.
+Function: get_uniform
+Get the location of the specified uniform.
 
-  Parameters:
-
-  path - Path to the texture file.
-  err - Output error string. 0 on success, non-zero otherwise.
-
-  Returns:
-
-  An OpenGL texture identifier.
+An exception is thrown on failure.
 */
-GLuint load_texture (const char* path, const char** err);
-
-#ifdef __cplusplus
-}
-#endif
+DECLDIR GLint get_uniform (GLuint prog, const char* name);

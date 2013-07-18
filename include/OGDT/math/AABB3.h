@@ -1,5 +1,6 @@
 #pragma once
 
+#include <OGDT/OGDT.h>
 #include <OGDT/math/vec3.h>
 
 namespace OGDT
@@ -9,16 +10,16 @@ namespace OGDT
 Struct: AABB3
 A 3D axis-aligned bounding box.
 */
-struct AABB3
+struct DECLDIR AABB3
 {
     vec3 min, max;
-
+    
     /*
     Constructor: AABB3
     Construct an AABB3 with both vertices set to 0.
     */
     AABB3 () {}
-
+    
     /*
     Constructor: AABB3
     Construct an AABB3 from the given corner points.
@@ -29,7 +30,7 @@ struct AABB3
     _max - Top right corner.
     */
     AABB3 (vec3 _min, vec3 _max) : min (_min), max (_max) {}
-
+    
     /*
     Constructor: AABB3
     Construct an AABB3 from the given points.
@@ -40,7 +41,7 @@ struct AABB3
     n  - The number of points in the array.
     */
     AABB3 (vec3* ps, unsigned n);
-
+    
     /*
     Function: add
     Update the AABB3 so that it includes the given point.

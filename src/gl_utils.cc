@@ -1,28 +1,26 @@
 #include <OGDT/gl_utils.h>
+#include <OGDT/Exception.h>
 #include <OGDT/Image.h>
-#include <OGDT/TLS.h>
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
 
-#define ERROR_SIZE 4096
 
-static TLS char err_buf [ERROR_SIZE];
+using namespace OGDT;
+
 
 char* copy_string (const char* str)
 {
     size_t n = strlen (str);
-    char* scopy = (char*) malloc (n+1);
-    assert (scopy);
+    char* scopy = new char[n+1];
     strcpy (scopy, str);
     return scopy;
 }
 
-GLuint create_shader (const char* code, GLenum shader_type, const char** err)
+
+GLuint create_shader (const char* code, GLenum shader_type)
 {
-    *err = 0;
-    GLuint shader = glCreateShader (shader_type);
+    const GLuint shader = glCreateShader (shader_type);
     if (shader)
     {
         const GLchar* shader_code[] = {code};
@@ -36,45 +34,43 @@ GLuint create_shader (const char* code, GLenum shader_type, const char** err)
             glGetShaderiv (shader, GL_INFO_LOG_LENGTH, &log_len);
             if (log_len > 0)
             {
-                char* log = (char*) malloc (log_len);
-                assert (log);
+                char* log = new char[log_len];
                 glGetShaderInfoLog (shader, log_len, NULL, log);
-                snprintf (err_buf, ERROR_SIZE, "%s", log);
-                free (log);
-                *err = err_buf;
+                throw EXCEPTION (log);
             }
-            else *err = "Shader compilation failed";
+            return 0;
         }
+        return shader;
     }
-    return shader;
+    else return 0;
 }
 
-GLuint create_shader_from_file (const char* path, GLenum shader_type, const char** err)
+
+GLuint create_shader_from_file (const char* path, GLenum shader_type)
 {
-    *err = 0;
     FILE* f = fopen (path, "r");
     if (!f)
     {
-        snprintf (err_buf, ERROR_SIZE, "Failed opening shader file %s", path);
-        *err = err_buf;
-        return 0;
+        std::ostringstream os;
+        os << "Failed opening shader file: " << path;
+        throw EXCEPTION (os);
     }
-
+    
     fseek (f, 0, SEEK_END);
     int len = ftell (f);
     fseek (f, 0, SEEK_SET);
-    char* code = (char*) malloc (len);
-    assert (code);
+    char* code = new char [len];
     fread (code, len, 1, f);
     fclose (f);
-
-    GLuint shader = glCreateShader (shader_type);
+    
+    const GLuint shader = glCreateShader (shader_type);
     if (shader)
     {
         const GLchar* shader_code[] = {code};
         const GLint lengths[] = {len};
         glShaderSource (shader, 1, shader_code, lengths);
         glCompileShader (shader);
+        delete[] code;
         GLint result;
         glGetShaderiv (shader, GL_COMPILE_STATUS, &result);
         if (result == GL_FALSE)
@@ -83,33 +79,31 @@ GLuint create_shader_from_file (const char* path, GLenum shader_type, const char
             glGetShaderiv (shader, GL_INFO_LOG_LENGTH, &log_len);
             if (log_len > 0)
             {
-                char* log = (char*) malloc (log_len);
-                assert (log);
+                char* log = new char[log_len];
                 glGetShaderInfoLog (shader, log_len, NULL, log);
-                snprintf (err_buf, ERROR_SIZE, "Failed loading shader file %s\n%s", path, log);
-                free (log);
-                *err = err_buf;
+                std::ostringstream os;
+                os << "Failed loading shader file " << path << ": " << log;
+                throw EXCEPTION (os);
             }
             else
             {
-                snprintf (err_buf, ERROR_SIZE, "Failed loading shader file %s", path);
-                *err = err_buf;
+                std::ostringstream os;
+                os << "Failed loading shader file " << path;
+                throw EXCEPTION (os);
             }
         }
+        return shader;
     }
-    else *err = "glCreateShader failed";
-    free (code);
-    return shader;
+    else throw EXCEPTION ("glCreateShader failed");
 }
 
-GLuint create_program (GLuint vertex_shader, GLuint fragment_shader, const char** err)
+
+GLuint create_program (GLuint vertex_shader, GLuint fragment_shader)
 {
-    *err = 0;
     GLuint prog = glCreateProgram ();
     if (prog == 0)
     {
-        *err = "create_program: Failed creating GLSL program";
-        return 0;
+        throw EXCEPTION ("create_program: Failed creating GLSL program");
     }
     glAttachShader (prog, vertex_shader);
     glAttachShader (prog, fragment_shader);
@@ -122,41 +116,24 @@ GLuint create_program (GLuint vertex_shader, GLuint fragment_shader, const char*
         glGetProgramiv (prog, GL_INFO_LOG_LENGTH, &log_len);
         if (log_len > 0)
         {
-            char* log = (char*) malloc (log_len);
-            assert (log);
+            char* log = new char[log_len];
             glGetProgramInfoLog (prog, log_len, NULL, log);
-            snprintf (err_buf, ERROR_SIZE, "Failed linking program\n%s", log);
-            free (log);
-            *err = err_buf;
+            throw EXCEPTION  (log);
         }
-        else *err = "Failed linking program";
+        return 0;
     }
-    return prog;
+    else return prog;
 }
 
-GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader, const char** err)
-{
-    GLuint vs = create_shader_from_file (vertex_shader, GL_VERTEX_SHADER, err);
-    if (*err) return 0;
-    GLuint fs = create_shader_from_file (fragment_shader, GL_FRAGMENT_SHADER, err);
-    if (*err) return 0;
-    GLuint prog = create_program (vs, fs, err);
-    if (*err) return 0;
-    glDeleteShader (vs);
-    glDeleteShader (fs);
-    return prog;
-}
 
-GLuint load_texture (const char* path, const char** err)
+GLuint load_texture (const char* path)
 {
     Image image;
-    image_init (&image);
-    image_from_file (&image, path, err);
-    if (*err) return 0;
-    image_flip_vertically (&image);
-    unsigned w = image.w;
-    unsigned h = image.h;
-    unsigned c = image.c;
+    Image::from_file(path, image);
+    image.flipVertically ();
+    unsigned w = image.width();
+    unsigned h = image.height();
+    unsigned c = image.numComponents();
     GLenum format;
     switch (c)
     {
@@ -171,12 +148,12 @@ GLuint load_texture (const char* path, const char** err)
     {
         GLfloat ani;
         glGetFloatv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ani);
-        gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image.pixels);
+        gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani);
     }
     else
     {
-        gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image.pixels);
+        gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
         glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         //glTexImage2D (GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
@@ -184,6 +161,29 @@ GLuint load_texture (const char* path, const char** err)
         //glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     glBindTexture (GL_TEXTURE_2D, 0);
-    image_free (&image);
     return tex;
+}
+
+
+GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader)
+{
+    GLuint vs = create_shader_from_file (vertex_shader, GL_VERTEX_SHADER);
+    GLuint fs = create_shader_from_file (fragment_shader, GL_FRAGMENT_SHADER);
+    GLuint prog = create_program (vs, fs);
+    glDeleteShader (vs);
+    glDeleteShader (fs);
+    return prog;
+}
+
+
+GLint get_uniform (GLuint prog, const char* name)
+{
+    GLint loc = glGetUniformLocation (prog, name);
+    if (loc == -1)
+    {
+        std::ostringstream os;
+        os << "Failed getting uniform location: " << name;
+        throw EXCEPTION (os);
+    }
+    return loc;
 }

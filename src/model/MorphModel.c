@@ -3,11 +3,8 @@
 #include <stdlib.h> // free
 #include <string.h> // strcmp
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846f
-#endif
-
 #ifndef __GNUC__ // Not compiling with GNU C compiler
+#define M_PI 3.14159265358979323846f
 float fmin (float a, float b)
 {
     return a <= b ? a : b;
@@ -110,19 +107,19 @@ void model_to_ground (MorphModel* model)
 {
     unsigned i, f;
     vec3* v = model->vertices;
-
+    
     // Compute the minimum y coordinate for each frame and translate
     // the model appropriately.
     for (f = 0; f < model->numFrames; ++f)
     {
         vec3* w = v;
         float y = v->y;
-
+        
         for (i = 0; i < model->numVertices; ++i, ++v)
         {
             y = fmin (y, v->y);
         }
-
+        
         v = w;
         for (i = 0; i < model->numVertices; ++i, ++v)
         {
@@ -144,7 +141,7 @@ void model_compute_boxes (MorphModel* model, float* points)
         float ymax = v->y;
         float zmin = v->z;
         float zmax = v->z;
-
+        
         unsigned i;
         for (i = 0; i < model->numVertices; ++i, ++v)
         {
@@ -155,7 +152,7 @@ void model_compute_boxes (MorphModel* model, float* points)
             ymax = fmax (ymax, v->y);
             zmax = fmax (zmax, v->z);
         }
-
+        
         *points++ = xmin; *points++ = ymin; *points++ = zmin;
         *points++ = xmax; *points++ = ymax; *points++ = zmax;
     }

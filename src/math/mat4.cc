@@ -109,7 +109,7 @@ const vec3& mat4::v3 () const
 }
 
 
-mat4 mat4::operator* (const mat4& m) const
+mat4 mat4::operator* (const mat4& m)
 {
     const mat4& a = *this;
 
