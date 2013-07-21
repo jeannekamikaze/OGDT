@@ -1,16 +1,15 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
 #include <OGDT/types.h>
 
 /*
 Class: Font
 A class for rendering text in 2D and 3D.
 */
-class DECLDIR Font
-{    
+class Font
+{
 public:
-    
+
     /*
     Enum: render_mode
 
@@ -22,7 +21,7 @@ public:
         screen_space,
         world_space
     };
-    
+
     /*
     Enum: draw_style
 
@@ -34,19 +33,19 @@ public:
         top_left,
         centered
     };
-    
+
 private:
-    
+
     unsigned    tex;            // Texture id.
     int         letter_stride;    // Stride between letters in the texture.
     int         alphabet_width; // Width of the font image.
     render_mode mode;            // Current render mode.
-    
+
     Font (const Font&);
     Font& operator= (const Font&);
-    
+
 public:
-    
+
     /*
     Constructor: Font
     Construct a font from the specified alphabet file.
@@ -64,29 +63,29 @@ public:
     Clean up the font.
     */
     ~Font ();
-    
+
     /*
     Function: startRender
     Prepare OpenGL for text rendering.
-    
+
     Parameters:
-    
+
     mode: The mode to render text in.
     */
     void startRender (render_mode mode = world_space);
-    
+
     /*
     Function: endRender
     End font rendering, restoring OpenGL to its original state.
     */
     void endRender ();
-    
+
     /*
     Function: render
     Render the given text.
     */
     void render (float xmin, float ymin, float zmin, float xmax, float ymax, float zmax, const char* text) const;
-    
+
     /*
     Function: render
     Render the given text.

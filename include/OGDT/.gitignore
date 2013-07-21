@@ -4,9 +4,3 @@ cmake/CMakeFiles
 cmake/Makefile
 cmake/cmake_install.cmake
 demos
-docs/data/
-docs/html/
-test/*.o
-test/math-test
-test/timer-test
-

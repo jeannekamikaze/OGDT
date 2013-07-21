@@ -5,35 +5,27 @@
 #include <cstring>
 #include <sstream>
 
-
 using namespace OGDT;
 
-
-char* copy_string (const char* str)
-{
+char* copy_string (const char* str) {
     size_t n = strlen (str);
     char* scopy = new char[n+1];
     strcpy (scopy, str);
     return scopy;
 }
 
-
-GLuint create_shader (const char* code, GLenum shader_type)
-{
+GLuint create_shader (const char* code, GLenum shader_type) {
     const GLuint shader = glCreateShader (shader_type);
-    if (shader)
-    {
+    if (shader) {
         const GLchar* shader_code[] = {code};
         glShaderSource (shader, 1, shader_code, NULL);
         glCompileShader (shader);
         GLint result;
         glGetShaderiv (shader, GL_COMPILE_STATUS, &result);
-        if (result == GL_FALSE)
-        {
+        if (result == GL_FALSE) {
             GLint log_len;
             glGetShaderiv (shader, GL_INFO_LOG_LENGTH, &log_len);
-            if (log_len > 0)
-            {
+            if (log_len > 0) {
                 char* log = new char[log_len];
                 glGetShaderInfoLog (shader, log_len, NULL, log);
                 throw EXCEPTION (log);
@@ -45,12 +37,9 @@ GLuint create_shader (const char* code, GLenum shader_type)
     else return 0;
 }
 
-
-GLuint create_shader_from_file (const char* path, GLenum shader_type)
-{
+GLuint create_shader_from_file (const char* path, GLenum shader_type) {
     FILE* f = fopen (path, "r");
-    if (!f)
-    {
+    if (!f) {
         std::ostringstream os;
         os << "Failed opening shader file: " << path;
         throw EXCEPTION (os);
@@ -64,8 +53,7 @@ GLuint create_shader_from_file (const char* path, GLenum shader_type)
     fclose (f);
     
     const GLuint shader = glCreateShader (shader_type);
-    if (shader)
-    {
+    if (shader) {
         const GLchar* shader_code[] = {code};
         const GLint lengths[] = {len};
         glShaderSource (shader, 1, shader_code, lengths);
@@ -73,20 +61,17 @@ GLuint create_shader_from_file (const char* path, GLenum shader_type)
         delete[] code;
         GLint result;
         glGetShaderiv (shader, GL_COMPILE_STATUS, &result);
-        if (result == GL_FALSE)
-        {
+        if (result == GL_FALSE) {
             GLint log_len;
             glGetShaderiv (shader, GL_INFO_LOG_LENGTH, &log_len);
-            if (log_len > 0)
-            {
+            if (log_len > 0) {
                 char* log = new char[log_len];
                 glGetShaderInfoLog (shader, log_len, NULL, log);
                 std::ostringstream os;
                 os << "Failed loading shader file " << path << ": " << log;
                 throw EXCEPTION (os);
             }
-            else
-            {
+            else {
                 std::ostringstream os;
                 os << "Failed loading shader file " << path;
                 throw EXCEPTION (os);
@@ -97,12 +82,9 @@ GLuint create_shader_from_file (const char* path, GLenum shader_type)
     else throw EXCEPTION ("glCreateShader failed");
 }
 
-
-GLuint create_program (GLuint vertex_shader, GLuint fragment_shader)
-{
+GLuint create_program (GLuint vertex_shader, GLuint fragment_shader) {
     GLuint prog = glCreateProgram ();
-    if (prog == 0)
-    {
+    if (prog == 0) {
         throw EXCEPTION ("create_program: Failed creating GLSL program");
     }
     glAttachShader (prog, vertex_shader);
@@ -110,12 +92,10 @@ GLuint create_program (GLuint vertex_shader, GLuint fragment_shader)
     glLinkProgram (prog);
     GLint result;
     glGetProgramiv (prog, GL_LINK_STATUS, &result);
-    if (result == GL_FALSE)
-    {
+    if (result == GL_FALSE) {
         GLint log_len;
         glGetProgramiv (prog, GL_INFO_LOG_LENGTH, &log_len);
-        if (log_len > 0)
-        {
+        if (log_len > 0) {
             char* log = new char[log_len];
             glGetProgramInfoLog (prog, log_len, NULL, log);
             throw EXCEPTION  (log);
@@ -125,9 +105,7 @@ GLuint create_program (GLuint vertex_shader, GLuint fragment_shader)
     else return prog;
 }
 
-
-GLuint load_texture (const char* path)
-{
+GLuint load_texture (const char* path) {
     Image image;
     Image::from_file(path, image);
     image.flipVertically ();
@@ -135,8 +113,7 @@ GLuint load_texture (const char* path)
     unsigned h = image.height();
     unsigned c = image.numComponents();
     GLenum format;
-    switch (c)
-    {
+    switch (c) {
     case 1:  format = GL_DEPTH; break;
     case 3:  format = GL_RGB;   break;
     default: format = GL_RGBA;  break;
@@ -144,15 +121,13 @@ GLuint load_texture (const char* path)
     GLuint tex;
     glGenTextures (1, &tex);
     glBindTexture (GL_TEXTURE_2D, tex);
-    if (GLEW_EXT_texture_filter_anisotropic)
-    {
+    if (GLEW_EXT_texture_filter_anisotropic) {
         GLfloat ani;
         glGetFloatv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ani);
         gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani);
     }
-    else
-    {
+    else {
         gluBuild2DMipmaps (GL_TEXTURE_2D, c, w, h, format, GL_UNSIGNED_BYTE, image);
         glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -164,9 +139,7 @@ GLuint load_texture (const char* path)
     return tex;
 }
 
-
-GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader)
-{
+GLuint create_program_from_files (const char* vertex_shader, const char* fragment_shader) {
     GLuint vs = create_shader_from_file (vertex_shader, GL_VERTEX_SHADER);
     GLuint fs = create_shader_from_file (fragment_shader, GL_FRAGMENT_SHADER);
     GLuint prog = create_program (vs, fs);
@@ -175,12 +148,9 @@ GLuint create_program_from_files (const char* vertex_shader, const char* fragmen
     return prog;
 }
 
-
-GLint get_uniform (GLuint prog, const char* name)
-{
+GLint get_uniform (GLuint prog, const char* name) {
     GLint loc = glGetUniformLocation (prog, name);
-    if (loc == -1)
-    {
+    if (loc == -1) {
         std::ostringstream os;
         os << "Failed getting uniform location: " << name;
         throw EXCEPTION (os);

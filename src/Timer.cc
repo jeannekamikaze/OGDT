@@ -13,12 +13,9 @@
     const timeReading SEC_TO_NSEC = 1000000000;
 #endif
 
-
 static double secondsPerCount;
 
-
-static void timer_initialise_subsystem ()
-{
+static void timer_initialise_subsystem () {
 #ifdef WIN32
     __int64 countsPerSec;
     QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
@@ -30,9 +27,7 @@ static void timer_initialise_subsystem ()
 #endif
 }
 
-
-void timer_sleep (float seconds)
-{
+void timer_sleep (float seconds) {
 #ifdef WIN32
     Sleep((DWORD)(seconds * 1000));
 #else
@@ -43,9 +38,7 @@ void timer_sleep (float seconds)
 #endif
 }
 
-
-static timeReading now ()
-{
+static timeReading now () {
     timeReading t;
 #ifdef __APPLE__
     t = mach_absolute_time();
@@ -59,18 +52,13 @@ static timeReading now ()
     return t;
 }
 
-
-Timer::Timer ()
-{
+Timer::Timer () {
     timer_initialise_subsystem();
     reset();
 }
 
-
-void Timer::tick ()
-{
-    if (stopped)
-    {
+void Timer::tick () {
+    if (stopped) {
         deltaTime = 0.0;
         return;
     }
@@ -87,15 +75,10 @@ void Timer::tick ()
     // Force nonnegative. The DXSDK's CDXUTTimer mentions that if the
     // processor goes into a power save mode or we get shuffled to
     // another processor, then the delta time can be negative.
-    if(deltaTime < 0.0f)
-    {
-        deltaTime = 0.0f;
-    }
+    if(deltaTime < 0.0f) deltaTime = 0.0f;
 }
 
-
-void Timer::reset ()
-{
+void Timer::reset () {
     timeReading n = now();
     baseTime = n;
     stopTime = n;
@@ -106,12 +89,9 @@ void Timer::reset ()
     stopped = true;
 }
 
-
-void Timer::stop ()
-{
+void Timer::stop () {
     // Don't do anything if we are already stopped.
-    if (!stopped)
-    {
+    if (!stopped) {
         // Grab the stop time.
         stopTime = now();
 
@@ -120,12 +100,9 @@ void Timer::stop ()
     }
 }
 
-
-void Timer::start ()
-{
+void Timer::start () {
     // Only start if we are stopped.
-    if (stopped)
-    {
+    if (stopped) {
         timeReading startTime = now();
 
         // Accumulate the paused time.
@@ -140,30 +117,23 @@ void Timer::start ()
     }
 }
 
-
 double Timer::getTime () const
 {
     // If we are stopped, we do not count the time we have been stopped for.
-    if (stopped)
-    {
+    if (stopped) {
         return (double)((stopTime - baseTime) * secondsPerCount);
     }
     // Otherwise return the time elapsed since the start but without
     // taking into account the time we have been stopped for.
-    else
-    {
+    else {
         return (double)((curTime - baseTime - pausedTime) * secondsPerCount);
     }
 }
 
-
-float Timer::getDelta () const
-{
+float Timer::getDelta () const {
     return deltaTime;
 }
 
-
-bool Timer::isRunning () const
-{
+bool Timer::isRunning () const {
     return !stopped;
 }

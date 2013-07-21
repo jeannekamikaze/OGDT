@@ -1,24 +1,20 @@
 #include "MorphModel_render.h"
 #include <OGDT/gl.h>
 
-
-static void lerp (const vec3* v1, const vec3* v2, float p, vec3* out)
-{
+static void lerp (const vec3* v1, const vec3* v2, float p, vec3* out) {
     out->x = v1->x + p * (v2->x - v1->x);
     out->y = v1->y + p * (v2->y - v1->y);
     out->z = v1->z + p * (v2->z - v1->z);
 }
 
-
-static void normal_lerp (const vec3* n1, const vec3* n2, float p, vec3* out)
-{
+static void normal_lerp (const vec3* n1, const vec3* n2, float p, vec3* out) {
     out->x = (1.0f - p) * n1->x + p * n2->x;
     out->y = (1.0f - p) * n1->y + p * n2->y;
     out->z = (1.0f - p) * n1->z + p * n2->z;
 }
 
-
-void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame2, float p)
+void MorphModel_render
+(const MorphModel* model, unsigned frame1, unsigned frame2, float p)
 {
     triangle* t;
     texCoord *t1, *t2, *t3;
@@ -43,8 +39,7 @@ void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame
     
     glBegin (GL_TRIANGLES);
     
-    for (i = 0; i < model->numTriangles; ++i)
-    {
+    for (i = 0; i < model->numTriangles; ++i) {
         t = &triangle[i];
         
         v11 = &v1[t->vertexIndices[0]];
@@ -91,9 +86,8 @@ void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame
     glEnd ();
 }
 
-
-void MorphModel_render_static (const MorphModel* model, unsigned int currentFrame)
-{
+void MorphModel_render_static
+(const MorphModel* model, unsigned int currentFrame) {
     triangle* t;
     vec3 *v1, *v2, *v3;
     vec3 *n1, *n2, *n3;
@@ -107,8 +101,7 @@ void MorphModel_render_static (const MorphModel* model, unsigned int currentFram
     
     glBegin (GL_TRIANGLES);
     
-    for (i = 0; i < model->numTriangles; ++i)
-    {
+    for (i = 0; i < model->numTriangles; ++i) {
         t = &triangle[i];
         
         v1 = &v[t->vertexIndices[0]];

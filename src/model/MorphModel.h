@@ -98,16 +98,16 @@ void model_to_ground (MorphModel*);
 void model_compute_boxes (MorphModel*, float* points);
 
 void model_compute_aabb
-	(MorphModel*, unsigned frame,
-	float* xmin, float* xmax, float* ymin, float* ymax, float* zmin, float* zmax);
+(MorphModel*, unsigned frame, float* xmin, float* xmax, float* ymin
+,float* ymax, float* zmin, float* zmax);
 
 void model_compute_aabb_se
-	(MorphModel*, unsigned frame_start, unsigned frame_end,
-	float* xmin, float* xmax, float* ymin, float* ymax, float* zmin, float* zmax);
+(MorphModel*, unsigned frame_start, unsigned frame_end, float* xmin
+,float* xmax, float* ymin, float* ymax, float* zmin, float* zmax);
 
 void model_compute_anim_aabb
-	(MorphModel*, const char* animation,
-	float* xmin, float* xmax, float* ymin, float* ymax, float* zmin, float* zmax);
+(MorphModel*, const char* animation, float* xmin, float* xmax
+,float* ymin, float* ymax, float* zmin, float* zmax);
 
 animation* model_find_animation (MorphModel*, const char* name);
 

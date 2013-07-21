@@ -1,6 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
 #include <OGDT/Input.h>
 
 namespace OGDT
@@ -9,7 +8,7 @@ namespace OGDT
 /*
 Class: Application
 */
-class DECLDIR Application
+class Application
 {
     struct _impl;
     _impl* impl;
@@ -47,14 +46,14 @@ public:
     void run ();
 
     /*
-    Function: runCapped
+    Function: run
     Enter the application's main loop, with a cap on the frame rate.
 
     Parameters:
 
     max_fps - The desired frame rate.
     */
-    void runCapped (int max_fps);
+    void run (int max_fps);
 
     /*
     Function: quit
@@ -79,6 +78,12 @@ public:
     Set whether the input should be automatically polled.
     */
     void setAutoPollInput (bool val);
+    
+    /*
+    Function: setAutoSwapBuffers
+    Set whether buffers should be automatically swapped at the end of onUpdate.
+    */
+    void setAutoSwapBuffers (bool val);
 
     /*
     Function: setCursorVisible
@@ -162,7 +167,7 @@ protected:
 
     dt - The time elapsed since the last frame, in seconds.
     */
-    virtual void update (float dt) {}
+    virtual void onUpdate (float dt) {}
 };
 
 } // namespace OGDT

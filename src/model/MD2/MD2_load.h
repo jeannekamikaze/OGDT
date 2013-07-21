@@ -4,7 +4,6 @@
 #include "../MorphModel.h"
 #include "../Model_error_code.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,6 +16,5 @@ Model_error_code MD2_load (const char* filename, char clockwise, char left_hande
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // _MD2_LOAD_H

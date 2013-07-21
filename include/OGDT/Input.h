@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 namespace OGDT
 {
 
@@ -9,7 +7,7 @@ namespace OGDT
 Class: Input
 Handles keyboard and mouse input.
 */
-class DECLDIR Input
+class Input
 {
     struct _impl;
     _impl* impl;

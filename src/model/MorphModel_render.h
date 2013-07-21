@@ -3,7 +3,6 @@
 
 #include "MorphModel.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,7 +13,6 @@ extern "C" {
 /// The model is interpolated between frames 'frame1' and 'frame2'.
 void MorphModel_render (const MorphModel* model, unsigned frame1, unsigned frame2, float p);
 
-
 /// Renders the given MD2 model.
 /// The model is rendered at frame 'currentFrame'.
 void MorphModel_render_static (const MorphModel* model, unsigned int currentFrame);
@@ -22,6 +20,5 @@ void MorphModel_render_static (const MorphModel* model, unsigned int currentFram
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // _MD2_RENDER_H

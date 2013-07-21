@@ -1,10 +1,6 @@
-#include <OGDT/model/ModelInstance.h>
-#include <OGDT/model/Model.h>
-#include <OGDT/model/Animation.h>
-
+#include <OGDT/model.h>
 
 using namespace OGDT;
-
 
 struct ModelInstance::_impl
 {
@@ -17,53 +13,36 @@ struct ModelInstance::_impl
     float speed;
 
     _impl (const Model& _model)
-        : model (_model), anim (nullptr), animation_active (false), loop (false), t (0.0f), speed (1.0f)
-    {
-    }
+        : model (_model), anim (nullptr), animation_active (false)
+        , loop (false), t (0.0f), speed (1.0f) {}
 };
 
+ModelInstance::ModelInstance (const Model& model)
+    : impl (new _impl(model)) {}
 
-ModelInstance::ModelInstance (const Model& model) : impl (new _impl(model))
-{
-}
-
-
-ModelInstance::~ModelInstance ()
-{
+ModelInstance::~ModelInstance () {
     delete impl;
 }
 
-
-void ModelInstance::update (float dt)
-{
-    if (impl->animation_active)
-    {
+void ModelInstance::update (float dt) {
+    if (impl->animation_active) {
         dt *= impl->speed;
         impl->t += dt;
-        if (impl->loop)
-        {
-            if (impl->t > impl->anim->duration)
-            {
+        if (impl->loop) {
+            if (impl->t > impl->anim->duration) {
                 impl->t = impl->t - impl->anim->duration;
             }
         }
-        else
-        {
-            if (impl->t > impl->anim->duration - 1)
-            {
+        else if (impl->t > impl->anim->duration - 1) {
                 impl->t = impl->anim->duration - 1;
                 impl->animation_active = false;
-            }
         }
     }
 }
 
-
-void ModelInstance::setAnimation (const char* name, bool loop)
-{
+void ModelInstance::setAnimation (const char* name, bool loop) {
     impl->anim = impl->model.getAnimation(name);
-    if (impl->anim)
-    {
+    if (impl->anim) {
         impl->animation_active = true;
         impl->loop = loop;
         impl->t = 0.0f;
@@ -71,40 +50,26 @@ void ModelInstance::setAnimation (const char* name, bool loop)
     else impl->animation_active = false;
 }
 
-
-const char* ModelInstance::getAnimation () const
-{
+const char* ModelInstance::getAnimation () const {
     if (impl->anim) return impl->anim->name;
     else return "";
 }
 
-
-void ModelInstance::setAnimationSpeed (float speed)
-{
+void ModelInstance::setAnimationSpeed (float speed) {
     impl->speed = speed;
 }
 
-
-bool ModelInstance::isAnimationDone () const
-{
+bool ModelInstance::isAnimationDone () const {
     return !impl->animation_active;
 }
 
-
-bool ModelInstance::isAnimated () const
-{
+bool ModelInstance::isAnimated () const {
     return impl->model.isAnimated();
 }
 
-
-void ModelInstance::render () const
-{
-    if (impl->model.isAnimated())
-    {
+void ModelInstance::render () const {
+    if (impl->model.isAnimated()) {
         impl->model.render (impl->t, impl->anim);
     }
-    else
-    {
-        impl->model.render ();
-    }
+    else impl->model.render ();
 }

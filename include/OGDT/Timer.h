@@ -1,7 +1,5 @@
 #pragma once
 
-#include <OGDT/OGDT.h>
-
 #ifdef WIN32
     #ifdef _MSC_VER
         typedef __int64 timeReading;
@@ -16,7 +14,7 @@
 Class: Timer
 A high resolution timer.
 */
-class DECLDIR Timer
+class Timer
 {
     timeReading baseTime;   // The instant since we start timing.
     timeReading stopTime;   // The instant the timer is stopped.

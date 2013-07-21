@@ -10,14 +10,11 @@
     #include <fstream>
 #endif
 
-
 #ifndef _USE_OLD_IOSTREAMS
 using namespace std;
 #endif
 
-
-void open_console (int console_lines)
-{
+void open_console (int console_lines) {
 #if defined(OGDT_DEBUG) && defined(WIN32)
     int hConHandle;
     long lStdHandle;

@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE Timer
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
-#include <OGDT/math/utils.h>
+#include <OGDT/math.h>
 #include <OGDT/Timer.h>
 #include <cstdio>
 

@@ -5,22 +5,20 @@
 #include <algorithm>
 #include <cstring>
 
-
 using namespace OGDT;
-
 
 // Renders the given text.
 // pos corresponds to the bottom left corner of the rendered text.
 // size represents the size (width and height) of each letter in object space.
-void renderText(const char* text, float px, float py, float pz, int font_size, int alphabet_width, float size);
+void renderText
+(const char* text, float px, float py, float pz, int font_size
+,int alphabet_width, float size);
 
 void enter2D();
 void leave2D();
 
-
 Font::Font (const char* alphabet_path, int w, int h)
-    : letter_stride (43), alphabet_width (w)
-{
+    : letter_stride (43), alphabet_width (w) {
     Image img;
     Image::from_file (alphabet_path, img);
     glGenTextures (1, &tex);
@@ -32,15 +30,11 @@ Font::Font (const char* alphabet_path, int w, int h)
     glBindTexture (GL_TEXTURE_2D, 0);
 }
 
-
-Font::~Font ()
-{
+Font::~Font () {
     glDeleteTextures(1, &tex);
 }
 
-
-void Font::startRender (render_mode mode)
-{
+void Font::startRender (render_mode mode) {
     glPushAttrib(GL_LIGHTING_BIT);
     glPushAttrib(GL_POLYGON_BIT);
     glPushAttrib(GL_DEPTH_BUFFER_BIT);
@@ -58,9 +52,7 @@ void Font::startRender (render_mode mode)
     if (mode == screen_space) enter2D();
 }
 
-
-void Font::endRender ()
-{
+void Font::endRender () {
     if (mode == screen_space) leave2D();
     
     glDisable(GL_BLEND);
@@ -71,10 +63,11 @@ void Font::endRender ()
     glPopAttrib();
 }
 
-
-void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, float zmax, const char* text) const
-{
-    // Compute the size of the longest line and total height to determine the font's size.
+void Font::render
+(float xmin, float ymin, float zmin, float xmax, float ymax, float zmax
+,const char* text) const {
+    // Compute the size of the longest line and
+    // total height to determine the font's size.
     int width  = 0;
     int height = 1;
     int currentWidth = 0;
@@ -82,13 +75,10 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
     
     const char* ptr = text;
     const char* end = ptr + len;
-    for (; ptr != end; ++ptr)
-    {
+    for (; ptr != end; ++ptr) {
         char c0 = *ptr;
         char c1 = *(ptr+1);
-        
-        if (c0 == '\n' || (c0 == '\\' && c1 == 'n'))
-        {
+        if (c0 == '\n' || (c0 == '\\' && c1 == 'n')) {
             height++;
             width = std::max (width, currentWidth);
             currentWidth = 0;
@@ -97,8 +87,7 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
         else currentWidth++;
     }
     
-    if (text[len-1] != '\n')
-    {
+    if (text[len-1] != '\n') {
         width = std::max (width, currentWidth);
     }
     
@@ -112,21 +101,20 @@ void Font::render (float xmin, float ymin, float zmin, float xmax, float ymax, f
     float ytl = ymax;
     float ztl = zmin;
     
-    renderText (text, xtl, ytl, ztl, letter_stride, alphabet_width, font_size);
+    renderText
+        (text, xtl, ytl, ztl, letter_stride, alphabet_width, font_size);
 }
 
-
-void Font::render (float px, float py, float pz, const char* text, float font_size, draw_style style) const
-{
+void Font::render
+(float px, float py, float pz, const char* text
+,float font_size, draw_style style) const {
     float xpos, ypos, zpos;
 
     size_t len = strlen (text);
     
     // Compute the text origin.
-    switch (style)
-    {
-    case centered:
-    {
+    switch (style) {
+    case centered: {
         // Compute average line size and number of lines.
         int sum = 0;
         int line_size = 0;
@@ -134,13 +122,10 @@ void Font::render (float px, float py, float pz, const char* text, float font_si
         
         const char* ptr = text;
         const char* end = ptr + len;
-        for (; ptr != end; ++ptr)
-        {
+        for (; ptr != end; ++ptr) {
             char c0 = *ptr;
             char c1 = *(ptr+1);
-            
-            if (c0 == '\n' || (c0 == '\\' && c1 == 'n'))
-            {
+            if (c0 == '\n' || (c0 == '\\' && c1 == 'n')) {
                 sum += line_size;
                 line_size = 0;
                 num_lines++;
@@ -168,38 +153,32 @@ void Font::render (float px, float py, float pz, const char* text, float font_si
     default: break;
     }
     
-    renderText(text, xpos, ypos, zpos, letter_stride, alphabet_width, font_size);
+    renderText
+        (text, xpos, ypos, zpos, letter_stride, alphabet_width, font_size);
 }
 
-
-void renderText (const char* text, float px, float py, float pz, int letter_stride, int alphabet_width, float size)
-{
+void renderText
+(const char* text, float px, float py, float pz, int letter_stride
+,int alphabet_width, float size) {
     float starting_x = px;
     float stride = (float) letter_stride / (float) alphabet_width;
     
     glBegin (GL_QUADS);
     
-    for (const char* ptr = text; *ptr; ++ptr)
-    {
+    for (const char* ptr = text; *ptr; ++ptr) {
         char c = *ptr;
         char c1 = *(ptr+1);
         
-        if (c == '\n' || (c == '\\' && c1 == 'n')) //eol
-        {
+        if (c == '\n' || (c == '\\' && c1 == 'n')) { //eol
             py -= size;
             px = starting_x;
             if (c != '\n') ptr++;
         }
-        else
-        {
+        else {
             if (c < 0x20 || c >= 127) c = '?';
-            
             float x;
             if (c == 0x20) x = 0;
-            else
-            {
-                x = (c - 0x20) * stride;
-            }
+            else x = (c - 0x20) * stride;
             
             // Render quad for this character.
             
@@ -223,9 +202,7 @@ void renderText (const char* text, float px, float py, float pz, int letter_stri
     glEnd ();
 }
 
-
-void enter2D ()
-{
+void enter2D () {
     int vPort[4];
     
     glGetIntegerv(GL_VIEWPORT, vPort);
@@ -240,9 +217,7 @@ void enter2D ()
     glLoadIdentity();
 }
 
-
-void leave2D ()
-{
+void leave2D () {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     

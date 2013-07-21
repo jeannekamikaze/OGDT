@@ -3,6 +3,8 @@ cmake_minimum_required (VERSION 2.6)
 set (CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
 set (OGDT_AVOID_NORMALISATION False CACHE BOOL "Turn off vector normalisations for improved speed")
 set (CMAKE_DEBUG_POSTFIX "d")
+set (CMAKE_CXX_FLAGS "--std=c++0x")
+set (LIBRARY_OUTPUT_PATH "../bin")
 
 project (OGDT)
 
@@ -26,10 +28,12 @@ FIND_LIBRARY (glfw glfw)
 			"To-do: Make glfw an optional dependency.")
 	ENDIF (glfw STREQUAL glfw-NOTFOUND)
 
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    message("Configuring for debug mode")
+    add_definitions (-DOGDT_DEBUG)
+ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
+
 include_directories (../include)
 file (GLOB_RECURSE SOURCES ../src/*.cc ../src/*.c)
 add_library (OGDT STATIC ${SOURCES})
-
-set (CMAKE_CXX_FLAGS "--std=c++0x")
-set (LIBRARY_OUTPUT_PATH "../bin")
 
