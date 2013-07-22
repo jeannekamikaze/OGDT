@@ -36,9 +36,9 @@ struct Animation
 };
 
 /*
- * Class: Model
- * A static or animated 3D model.
- */
+Class: Model
+A static or animated 3D model.
+*/
 class Model
 {
     struct _impl;
@@ -50,66 +50,66 @@ class Model
 public:
 
     /*
-     * Constructor: Model
-     * Load a model from the specified file path.
-     */
+     Constructor: Model
+     Load a model from the specified file path.
+    */
     Model (const char* path);
 
     ~Model ();
 
     /*
-     * Function: render
-     * Render the model.
-     *
-     * Parameters:
-     *
-     * t - Animation time.
-     * anim - Animation to display.
-     */
+    Function: render
+    Render the model.
+    
+    Parameters:
+    
+    t - Animation time.
+    anim - Animation to display.
+    */
     void render (float t = 0.0f, const Animation* anim = nullptr) const;
 
     /*
-     * Function: isAnimated
-     * Return true if the model is animated, false otherwise.
-     */
+    Function: isAnimated
+    Return true if the model is animated, false otherwise.
+    */
     bool isAnimated () const;
 
     /*
-     * Function: getAnimation
-     * Return the animation specified by the given name if it exists, null otherwise.
-     */
+    Function: getAnimation
+    Return the animation specified by the given name if it exists, null otherwise.
+    */
     const Animation* getAnimation (const char* name) const;
 
     /*
-     * Function: scale
-     * Scale the model.
-     *
-     * Parameters:
-     *
-     * sx - Scaling along the x axis.
-     * sy - Scaling along the y axis.
-     * sz - Scaling along the z axis.
-     */
+    Function: scale
+    Scale the model.
+    
+    Parameters:
+    
+    sx - Scaling along the x axis.
+    sy - Scaling along the y axis.
+    sz - Scaling along the z axis.
+    */
     void scale (float sx, float sy, float sz);
 
     /*
-     * Function: pitch
-     * Rotate the model about the X axis.
-     *
-     * Parameters:
-     *
-     * angle - Angle of rotation in degrees.
-     */
+    Function: pitch
+    Rotate the model about the X axis.
+    
+    Parameters:
+    
+    angle - Angle of rotation in degrees.
+    */
     void pitch (float angle);
 
     /*
-     * Function: yaw
-     * Rotate the model about the Y axis.
-     *
-     * Parameters:
-     *
-     * angle - Angle of rotation in degrees.
-     */
+    Function: yaw
+    Rotate the model about the Y axis.
+    
+    Parameters:
+    
+    angle - Angle of rotation in degrees.
+    */
     void yaw (float angle);
 
     /*
@@ -195,8 +195,7 @@ public:
     /*
      * Function: isAnimationDone
      * Return true if the current animation is done.
-     *
-     * This returns false if no animation is being played.
+     * Return false if the animation is not done or no animation is being played.
      *
      * If an animation is set to loop it is never considered done.
      */
