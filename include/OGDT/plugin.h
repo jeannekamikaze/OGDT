@@ -144,7 +144,7 @@ public:
     
     OGDT::Exception - Failed resolving the specified function.
     */
-    function operator () (const char* function_name) {
+    Plugin::function operator () (const char* function_name) {
         return function(plugin_manager->resolve(*this, function_name));
     }
 };
