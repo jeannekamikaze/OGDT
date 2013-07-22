@@ -6,7 +6,8 @@ cmake/cmake_install.cmake
 demos
 docs/data/
 docs/html/
-test/*.o
+*.o
 test/math-test
 test/timer-test
-
+test/plugin/libmylib.so
+test/plugin/program
