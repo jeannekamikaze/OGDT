@@ -48,8 +48,8 @@ int main ()
         // baz.cc:5:36: error: ‘print2f’ was not declared in this scope
         
         const char baz_code[] =
-            "#include <cstdio>\n"
             "#include \"Foo.h\"\n"
+            "#include <cstdio>\n"
             "class Baz : public Foo {\n"
             "public:\n"
             "    void greet () { print2f(\"Baz\\n\"); }\n"
