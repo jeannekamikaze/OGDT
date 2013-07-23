@@ -4,5 +4,5 @@ class Foo
 {
 public:
     
-    virtual const char* greet () = 0;
+    virtual void greet () = 0;
 };

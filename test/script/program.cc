@@ -26,9 +26,10 @@ int main ()
         
         const char bar_code[] =
             "#include \"Foo.h\"\n"
+            "#include <cstdio>\n"
             "class Bar : public Foo {\n"
             "public:\n"
-            "    const char* greet () { return \"Bar\"; }\n"
+            "    void greet () { printf(\"Bar\\n\"); }\n"
             "};\n"
             "extern \"C\" {\n"
             "Foo* new_foo () { return new Bar; }\n"
@@ -36,17 +37,22 @@ int main ()
         
         OGDT::Plugin p2 = loader.get("bar", bar_code);
         Foo* foo = (Foo*) p2("new_foo")();
-        printf("Foo says %s\n", foo->greet());
+        foo->greet(); // Bar
         delete foo;
         
-        // This throws an exception with the compile error.
-        // Notice the 'retu2rn'
+        // This throws the following exception:
+        //
+        // OGDT/src/script.cc, line: 154: Failed compiling script baz:
+        // process exited with error code 1. Error:
+        // baz.cc: In member function ‘virtual void Baz::greet()’:
+        // baz.cc:5:36: error: ‘print2f’ was not declared in this scope
         
         const char baz_code[] =
+            "#include <cstdio>\n"
             "#include \"Foo.h\"\n"
             "class Baz : public Foo {\n"
             "public:\n"
-            "    const char* greet () { retu2rn \"Baz\"; }\n"
+            "    void greet () { print2f(\"Baz\\n\"); }\n"
             "};\n"
             "extern \"C\" {\n"
             "Foo* new_foo () { return new Baz; }\n"
