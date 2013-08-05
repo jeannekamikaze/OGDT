@@ -90,6 +90,12 @@ public:
     Set the mouse cursor visible on visible.
     */
     void setCursorVisible (bool val);
+    
+    /*
+    Function: setMouseAutoCenter
+    Set the mouse position to the center of the window every frame.
+    */
+    void setMouseAutoCenter (bool val);
 
     /*
     Function: setKeyRepeat

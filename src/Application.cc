@@ -13,8 +13,10 @@ struct Application::_impl
     bool running;
     bool auto_poll;
     bool auto_swap;
+    bool auto_center_mouse;
 
-    _impl () : running (false), auto_poll (true), auto_swap (true)
+    _impl () : running (false), auto_poll (true), auto_swap (true),
+        auto_center_mouse (false)
     {
     }
 };
@@ -153,6 +155,10 @@ void Application::run (int max_fps)
             if (impl->auto_poll) impl->input.poll();
             onUpdate (dt);
             if (impl->auto_swap) swapBuffers();
+            if (impl->auto_center_mouse) {
+                glfwGetWindowSize (&width, &height);
+                glfwSetMousePos (width/2, height/2);
+            }
             running = running && glfwGetWindowParam (GLFW_OPENED) && !windowCloseRequested;
             control.tick ();
 
@@ -190,6 +196,11 @@ void Application::setCursorVisible (bool val)
 {
     if (val) glfwEnable  (GLFW_MOUSE_CURSOR);
     else     glfwDisable (GLFW_MOUSE_CURSOR);
+}
+
+void Application::setMouseAutoCenter (bool val)
+{
+    impl->auto_center_mouse = val;
 }
 
 void Application::setKeyRepeat (bool val)
