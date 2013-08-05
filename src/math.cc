@@ -691,23 +691,23 @@ void mat4::operator*= (const mat4& m) {
     const mat4& a = *this;
 
     R m00 = a(0,0) * m(0,0) + a(0,1) * m(1,0) + a(0,2) * m(2,0) + a(0,3) * m(3,0);
-    R m01 = a(0,0) * m(0,1) + a(0,1) * m(1,1) + a(0,2) * m(2,1) + a(0,3) * m(3,1);
-    R m02 = a(0,0) * m(0,2) + a(0,1) * m(1,2) + a(0,2) * m(2,2) + a(0,3) * m(3,2);
-    R m03 = a(0,0) * m(0,3) + a(0,1) * m(1,3) + a(0,2) * m(2,3) + a(0,3) * m(3,3);
+    R m10 = a(0,0) * m(0,1) + a(0,1) * m(1,1) + a(0,2) * m(2,1) + a(0,3) * m(3,1);
+    R m20 = a(0,0) * m(0,2) + a(0,1) * m(1,2) + a(0,2) * m(2,2) + a(0,3) * m(3,2);
+    R m30 = a(0,0) * m(0,3) + a(0,1) * m(1,3) + a(0,2) * m(2,3) + a(0,3) * m(3,3);
 
-    R m10 = a(1,0) * m(0,0) + a(1,1) * m(1,0) + a(1,2) * m(2,0) + a(1,3) * m(3,0);
+    R m01 = a(1,0) * m(0,0) + a(1,1) * m(1,0) + a(1,2) * m(2,0) + a(1,3) * m(3,0);
     R m11 = a(1,0) * m(0,1) + a(1,1) * m(1,1) + a(1,2) * m(2,1) + a(1,3) * m(3,1);
-    R m12 = a(1,0) * m(0,2) + a(1,1) * m(1,2) + a(1,2) * m(2,2) + a(1,3) * m(3,2);
-    R m13 = a(1,0) * m(0,3) + a(1,1) * m(1,3) + a(1,2) * m(2,3) + a(1,3) * m(3,3);
+    R m21 = a(1,0) * m(0,2) + a(1,1) * m(1,2) + a(1,2) * m(2,2) + a(1,3) * m(3,2);
+    R m31 = a(1,0) * m(0,3) + a(1,1) * m(1,3) + a(1,2) * m(2,3) + a(1,3) * m(3,3);
 
-    R m20 = a(2,0) * m(0,0) + a(2,1) * m(1,0) + a(2,2) * m(2,0) + a(2,3) * m(3,0);
-    R m21 = a(2,0) * m(0,1) + a(2,1) * m(1,1) + a(2,2) * m(2,1) + a(2,3) * m(3,1);
+    R m02 = a(2,0) * m(0,0) + a(2,1) * m(1,0) + a(2,2) * m(2,0) + a(2,3) * m(3,0);
+    R m12 = a(2,0) * m(0,1) + a(2,1) * m(1,1) + a(2,2) * m(2,1) + a(2,3) * m(3,1);
     R m22 = a(2,0) * m(0,2) + a(2,1) * m(1,2) + a(2,2) * m(2,2) + a(2,3) * m(3,2);
-    R m23 = a(2,0) * m(0,3) + a(2,1) * m(1,3) + a(2,2) * m(2,3) + a(2,3) * m(3,3);
+    R m32 = a(2,0) * m(0,3) + a(2,1) * m(1,3) + a(2,2) * m(2,3) + a(2,3) * m(3,3);
 
-    R m30 = a(3,0) * m(0,0) + a(3,1) * m(1,0) + a(3,2) * m(2,0) + a(3,3) * m(3,0);
-    R m31 = a(3,0) * m(0,1) + a(3,1) * m(1,1) + a(3,2) * m(2,1) + a(3,3) * m(3,1);
-    R m32 = a(3,0) * m(0,2) + a(3,1) * m(1,2) + a(3,2) * m(2,2) + a(3,3) * m(3,2);
+    R m03 = a(3,0) * m(0,0) + a(3,1) * m(1,0) + a(3,2) * m(2,0) + a(3,3) * m(3,0);
+    R m13 = a(3,0) * m(0,1) + a(3,1) * m(1,1) + a(3,2) * m(2,1) + a(3,3) * m(3,1);
+    R m23 = a(3,0) * m(0,2) + a(3,1) * m(1,2) + a(3,2) * m(2,2) + a(3,3) * m(3,2);
     R m33 = a(3,0) * m(0,3) + a(3,1) * m(1,3) + a(3,2) * m(2,3) + a(3,3) * m(3,3);
 
     *this = mat4
@@ -1123,28 +1123,31 @@ void Spatial::moveDown (R speed) {
 void Spatial::rotate (R angle, R x, R y, R z) {
     mat4 transf = transform();
     vec3 axis = ::transform (inverse_transform(transf), vec3 (x,y,z), 0.0f);
+    axis.normalise();
     transf *= mat4::rot (angle, axis);
-    r = transf.v0();
-    u = transf.v1();
-    f = -transf.v2();
+    r = normalise(transf.v0());
+    u = normalise(transf.v1());
+    f = normalise(-transf.v2());
 }
 
 void Spatial::yaw (const R angle) {
     R a = angle * TO_RAD;
     R sa = sin (a);
     R ca = cos (a);
-    r = r * ca + f * sa;
+    f = f*ca - r*sa;
+    f.normalise();
+    r = cross (f, u);
     r.normalise();
-    f = cross (r, u);
 }
 
 void Spatial::pitch (const R angle) {
     R a = angle * TO_RAD;
     R sa = sin (a);
     R ca = cos (a);
-    f = f * ca + u * sa;
+    f = f*ca + u*sa;
     f.normalise();
     u = cross (r, f);
+    u.normalise();
 }
 
 void Spatial::roll (const R angle) {
