@@ -73,6 +73,14 @@ An exception is thrown on failure.
 GLint get_uniform (GLuint prog, const char* name);
 
 /*
+Function: get_attribute
+Get the location of the specified attribute.
+
+An exception is thrown on failure.
+*/
+GLint get_attribute (GLuint prog, const char* name);
+
+/*
 Function: assert_gl
 Throw an exception if there was an OpenGL error.
 */
