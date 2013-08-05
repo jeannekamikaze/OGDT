@@ -49,7 +49,11 @@ GLuint create_shader_from_file (const char* path, GLenum shader_type) {
     int len = ftell (f);
     fseek (f, 0, SEEK_SET);
     char* code = new char [len];
-    fread (code, len, 1, f);
+    if (fread (code, len, 1, f) != 1) {
+        std::ostringstream os;
+        os << "Failed reading shader file: " << path;
+        throw EXCEPTION (os);
+    }
     fclose (f);
     
     const GLuint shader = glCreateShader (shader_type);
@@ -150,6 +154,16 @@ GLuint create_program_from_files (const char* vertex_shader, const char* fragmen
 
 GLint get_uniform (GLuint prog, const char* name) {
     GLint loc = glGetUniformLocation (prog, name);
+    if (loc == -1) {
+        std::ostringstream os;
+        os << "Failed getting uniform location: " << name;
+        throw EXCEPTION (os);
+    }
+    return loc;
+}
+
+GLint get_attribute (GLuint prog, const char* name) {
+    GLint loc = glGetAttribLocation (prog, name);
     if (loc == -1) {
         std::ostringstream os;
         os << "Failed getting uniform location: " << name;
