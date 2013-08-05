@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/wait.h>
 
